@@ -22,3 +22,4 @@ def checkRotation(self, length, row, col, orientation, point):
             checkCells.append(newCell)
         else:
             break
+    return

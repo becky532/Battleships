@@ -1,5 +1,6 @@
 import logging
 
+
 # class Player:
 #
 #     WHITE = auto()
@@ -27,6 +28,13 @@ class Game:
 
         for row in range(self.boardSize):
             self.board.append([0] * self.boardSize)
+    def printBoard(self):
+        board = self.board
+        board.reverse()
+        for row in board:
+            for column in row:
+                print(column, end='')
+            print()
 
     def validatePlacement(self, length, row, col):
 
@@ -42,30 +50,35 @@ class Game:
 
         return placementValid
 
-    def getShipPosition(self, row, col, shipType):  # starting at 0,0
-        shipLength = self.shipsDict[shipType]['length']
-        placementValid = self.validatePlacement(shipLength, row, col)
-        if placementValid == True:
-            logging.info(f'Valid placement of {shipType}')
-            shipLength = self.shipsDict[shipType]["length"]
+    def placeShip(self, row, col, shipType):
+        if row <= self.lastIndex and col <= self.lastIndex:
+            shipLength = self.shipsDict[shipType]['length']
+            placementValid = self.validatePlacement(shipLength, row, col)
+            if placementValid == True:
+                logging.info(f'Valid placement of {shipType}')
+                shipLength = self.shipsDict[shipType]["length"]
 
-            for cellCol in range(col, col + shipLength):
-                self.shipsDict[shipType]['position'].append([row, cellCol])
+                for cellCol in range(col, col + shipLength):
+                    self.shipsDict[shipType]['position'].append([row, cellCol])
 
-            self.placeShip(shipType)
-            self.shipsDict[shipType]['orientation'] = 'horizontal'
+                self.place(shipType)
+                self.shipsDict[shipType]['orientation'] = 'horizontal'
+            else:
+                logging.info(f'Invalid placement of {shipType}')
         else:
-            logging.info(f'Invalid placement of {shipType}')
-    def removeShip(self, shipType):
+            logging.info("Invalid square chosen")
+
+    def remove(self, shipType):
         position = self.shipsDict[shipType]['position']
         for cell in position:
             self.board[cell[0]][cell[1]] = 0
-    def placeShip(self, shipType):
+
+    def place(self, shipType):
         position = self.shipsDict[shipType]['position']
         for cell in position:
             self.board[cell[0]][cell[1]] = 1
 
-    def checkRotateShip(self, shipType):
+    def rotateShip(self, shipType):
         shipPosition = self.shipsDict[shipType]['position']
         rotatingPoint = shipPosition[0]
         shipLength = self.shipsDict[shipType]['length']
@@ -73,57 +86,65 @@ class Game:
 
         shipCol = shipPosition[0][1]
         shipRow = shipPosition[0][0]
-        checkCells = [rotatingPoint]
 
-        if shipOrientation == 'horizontal':
-            for index in range(1, shipLength):
-                newCell = [shipRow + index, shipCol]
-                if self.board[newCell[0]][newCell[1]] == 0 and newCell[0] <= self.lastIndex:
+        checkCells = self.__checkRotation(shipLength, shipRow, shipCol, shipOrientation, rotatingPoint)
+
+        if shipOrientation == 'horizontal' and len(checkCells) == shipLength:
+
+            self.__rotate(shipType, checkCells)
+            self.shipsDict[shipType]['orientation'] = 'vertical'
+        elif shipOrientation == 'vertical' and len(checkCells == shipLength):
+
+            self.__rotate(shipType, checkCells)
+            self.shipsDict[shipType]['orientation'] = 'horizontal'
+        else:
+            logging.info(f"Ship {shipType} could not be rotated")
+
+    def __checkRotation(self, length, row, col, orientation, point):
+
+        checkCells = [point]
+        for index in range(1, length):
+            if orientation == 'horizontal':
+                newCell = [row + index, col]
+            else:
+                newCell = [row, col + index]
+
+            if newCell[0] <= self.lastIndex and newCell[1] <= self.lastIndex:
+
+                if self.board[newCell[0]][newCell[1]] == 0:
                     checkCells.append(newCell)
                 else:
                     break
-
-            if len(checkCells) == shipLength:
-                self.rotate(shipType, checkCells)
-                self.shipsDict[shipType]['orientation'] = 'vertical'
             else:
-                logging.info(f"Ship {shipType} could not be rotated")
+                break
 
-        if shipOrientation == 'vertical':
-            for index in range(1, shipLength):
-                newCell = [shipRow, shipCol + index]
-                if self.board[newCell[0]][newCell[1]] == 0 and newCell[1] <= self.lastIndex:
-                    checkCells.append(newCell)
-                else:
-                    break
+        return checkCells
 
-            if len(checkCells) == shipLength:
-                self.rotate(shipType, checkCells)
-                self.shipsDict[shipType]['orientation'] = 'horizontal'
-            else:
-                logging.info(f"Ship {shipType} could not be rotated")
-
-    def rotate(self, shipType, newPosition):
-        self.removeShip(shipType)
+    def __rotate(self, shipType, newPosition):
+        self.remove(shipType)
         self.shipsDict[shipType]['position'] = newPosition
         self.placeShip(shipType)
         self.shipsDict[shipType]['orientation'] = 'vertical'
         logging.info(f"Piece {shipType} has been rotated")
 
 
-
-
-
-
-
-#create a randomized placement of ships
+# create a randomized placement of ships
 
 if __name__ == '__main__':
     game = Game()
     game.createBoard()
-    print(game.board)
-    game.getShipPosition(0, 0, 'Submarine')
-    print(game.shipsDict['Submarine'])
-    game.rotateShip('Submarine')
-    print(game.shipsDict['Submarine'])
-    print(game.board)
+    game.placeShip(0, 0, 'Submarine')
+    game.placeShip(1, 0, 'Destroyer')
+    game.placeShip(4, 2, 'Cruiser')
+    game.printBoard()
+    print()
+    game.printBoard()
+
+    # print(game.shipsDict['Submarine'])
+    # game.rotateShip('Submarine')
+    # print(game.shipsDict['Submarine'])
+    # print(game.board)
+    # game.placeShip(6, 1, 'Cruiser')
+    # print(game.board)
+    # game.rotateShip('Cruiser')
+    # game.printBoard()
