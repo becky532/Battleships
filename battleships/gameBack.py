@@ -7,11 +7,11 @@ class Game:
 
     def __init__(self):
         self.board = []
-        self.shipsDict = {'Carrier': {'length': 5, 'position': []},
-                            'Battleship': {'length': 4, 'position': []},
-                            'Cruiser': {'length': 3, 'position': []},
-                            'Submarine': {'length': 3, 'position': []},
-                            'Destroyer': {'length': 2, 'position': []}
+        self.shipsDict = {'Carrier': {'length': 5, 'position': [], 'orientation': ''},
+                            'Battleship': {'length': 4, 'position': [], 'orientation': ''},
+                            'Cruiser': {'length': 3, 'position': [], 'orientation': ''},
+                            'Submarine': {'length': 3, 'position': [], 'orientation': ''},
+                            'Destroyer': {'length': 2, 'position': [], 'orientation': ''}
                             }
 
     def createBoard(self):
@@ -40,14 +40,26 @@ class Game:
                 for cellCol in range(col, shipLength + 1):
                     self.board[row][cellCol] = 1
                     self.shipsDict[shipType]['position'].append([row, cellCol])
+                self.shipsDict[shipType]['orientation'] = 'horizontal'
 
     def rotateShip(self, shipType):
         shipPosition = self.shipsDict[shipType]['position']
         shipLength = self.shipsDict[shipType]['length']
-        shipCol = shipPosition[0][1]
-        for cell in range(1, shipLength):
-            self.shipsDict[shipType]['position'][cell][0] = self.shipsDict[shipType]['position'][cell][1]
-            self.shipsDict[shipType]['position'][cell][1] = shipCol
+        shipOrientation = self.shipsDict[shipType]['orientation']
+        if shipOrientation == 'horizontal':
+            shipCol = shipPosition[0][1]
+            checkCells = [shipPosition[0]]
+            for cell in range(1, shipLength):
+                checkCells.append([self.shipsDict[shipType]['position'][cell][1], shipCol])
+            positionValid = self.validatePlacement(shipLength, checkCells[0], checkCells[1])
+            if positionValid == True:
+                for position in range(1, shipLength):
+                    self.shipsDict[shipType]['position'][position][0] = self.shipsDict[shipType]['position'][cell][1]
+                    self.shipsDict[shipType]['position'][position][1] = shipCol
+                    self.shipsDict[shipType]['orientation'] = 'vertical'
+
+                #validate cells
+                #remove 1 from horizontal and add to new cells
 
 # rotate ship once placed on board, clear a piece off of the board, create a randomized placement of ships
 
