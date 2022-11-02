@@ -14,11 +14,11 @@ class Board:
 
     def __init__(self):
         self.board = []
-        self.shipsDict = {'Carrier': {'length': 5, 'position': [], 'orientation': ''},
-                          'Battleship': {'length': 4, 'position': [], 'orientation': ''},
-                          'Cruiser': {'length': 3, 'position': [], 'orientation': ''},
-                          'Submarine': {'length': 3, 'position': [], 'orientation': ''},
-                          'Destroyer': {'length': 2, 'position': [], 'orientation': ''}
+        self.shipsDict = {'Carrier': {'length': 5, 'position': [], 'orientation': '', 'value': 1},
+                          'Battleship': {'length': 4, 'position': [], 'orientation': '', 'value': 2},
+                          'Cruiser': {'length': 3, 'position': [], 'orientation': '', 'value': 3},
+                          'Submarine': {'length': 3, 'position': [], 'orientation': '', 'value': 4},
+                          'Destroyer': {'length': 2, 'position': [], 'orientation': '', 'value': 5}
                           }
         self.player = 1
         logging.basicConfig(filename='battleships.log', level=logging.INFO, filemode='w', force=True)
@@ -98,8 +98,10 @@ class Board:
 
     def place(self, shipType):
         position = self.shipsDict[shipType]['position']
+        value = self.shipsDict[shipType]['value']
+
         for cell in position:
-            self.board[cell[0]][cell[1]] = 1
+            self.board[cell[0]][cell[1]] = value
 
     def clearBoard(self):
         self.newBoard()
