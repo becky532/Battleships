@@ -23,35 +23,36 @@ class Game:
             self.currentPlayer = self.secondPlayer
 
     def fire(self, row, col):
+        hit = None
+        shipHit = None
+        shipSunk = None
 
-        if self.currentPlayer == self.firstPlayer:
-            #if cell not alread chosen then try otherwise return already used
-            hit, shipHit = self.secondPlayer.checkHit(row, col)
-            shipSunk = self.secondPlayer.checkSunk(shipHit)
-            #if ship now destroyed then return shipSunk
+        if row <= 6 and col <= 6:
+            validHit = True
+            if self.currentPlayer == self.firstPlayer:
+
+                hit, shipHit = self.secondPlayer.checkHit(row, col)
+                shipSunk = self.secondPlayer.checkSunk(shipHit)
+
+            else:
+                hit, shipHit = self.firstPlayer.checkHit(row, col)
+                shipSunk = self.firstPlayer.checkSunk(shipHit)
+
+            self.switchPlayer()
         else:
-            hit, shipHit = self.firstPlayer.checkHit(row, col)
-            shipSunk = self.firstPlayer.checkSunk(shipHit)
+            validHit = False
 
-        return hit, shipHit, shipSunk
+        return validHit, hit, shipHit, shipSunk
+    def showPlayerBoard(self):
+        if self.currentPlayer == self.firstPlayer:
+            self.firstPlayer.printBoard()
+        else:
+            self.secondPlayer.printBoard()
+
+    # def checkGameOver(self):
+    #
+
 
 
 if __name__ == '__main__':
-    firstBoard = Board()
-    secondBoard = Board()
-    secondBoard.placeShip(0, 0, 'Carrier')
-    secondBoard.placeShip(1, 0, 'Destroyer')
-    secondBoard.placeShip(2, 0, 'Submarine')
-    secondBoard.placeShip(3, 0, 'Battleship')
-    secondBoard.placeShip(4, 0, 'Cruiser')
-
-    game = Game(firstBoard, secondBoard)
-    game.secondPlayer.printBoard()
-
-    noHit, ship, sunk = game.fire(1, 0)
-    noHit2, ship2, sunk2 = game.fire(1, 1)
-    game.secondPlayer.printBoard()
-
-
-
-
+    pass

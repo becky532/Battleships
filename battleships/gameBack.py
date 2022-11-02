@@ -48,6 +48,7 @@ class Board:
 
         for i in range(7):
             print(str(i) + ' ', end='')
+        print()
 
     def validateInitialPlacement(self, length, row, col):
 
@@ -180,30 +181,33 @@ class Board:
         return listShip
 
     def checkHit(self, row, col):
-        value = self.board[row][col]
-        hit = True
-        if value == 0:
-            hit = False
-            shipHit = None
-            self.board[row][col] = '.'
-        elif value == 1:
-            shipHit = 'Carrier'
-            self.knockOutCell(shipHit, row, col)
-        elif value == 2:
-            shipHit = 'Battleship'
-            self.knockOutCell(shipHit, row, col)
+        if row <= self.lastIndex and col<=self.lastIndex:
+            value = self.board[row][col]
+            hit = True
+            if value == 0:
+                hit = False
+                shipHit = None
+                self.board[row][col] = '.'
+            elif value == 1:
+                shipHit = 'Carrier'
+                self.knockOutCell(shipHit, row, col)
+            elif value == 2:
+                shipHit = 'Battleship'
+                self.knockOutCell(shipHit, row, col)
 
-        elif value == 3:
-            shipHit = 'Cruiser'
-            self.knockOutCell(shipHit, row, col)
-        elif value == 4:
-            shipHit = 'Submarine'
-            self.knockOutCell(shipHit, row, col)
-        else:
-            shipHit = 'Destroyer'
-            self.knockOutCell(shipHit, row, col)
+            elif value == 3:
+                shipHit = 'Cruiser'
+                self.knockOutCell(shipHit, row, col)
+            elif value == 4:
+                shipHit = 'Submarine'
+                self.knockOutCell(shipHit, row, col)
+            else:
+                shipHit = 'Destroyer'
+                self.knockOutCell(shipHit, row, col)
 
-        return hit, shipHit
+            return hit, shipHit
+
+
 
     def knockOutCell(self, ship, row, col):
         cell = self.shipsDict[ship]['position'].index([row, col])
