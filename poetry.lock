@@ -66,6 +66,38 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "netifaces"
+version = "0.10.6"
+description = "Portable network interface information."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "setuptools"
+version = "3.3"
+description = "Easily download, build, install, upgrade, and uninstall Python packages"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+certs = ["certifi (==1.0.1)"]
+"ssl:sys_platform=='win32'" = ["wincertstore (==0.2)"]
+
+[[package]]
+name = "socketio"
+version = "0.2.1"
+description = ""
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+netifaces = "0.10.6"
+setuptools = "3.3"
+
+[[package]]
 name = "Werkzeug"
 version = "2.2.2"
 description = "The comprehensive WSGI web application library."
@@ -82,7 +114,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "61c8106ebf02f3e22cf4b70602d08ce90b3b932cabe46c2288eac49431a9bc27"
+content-hash = "e85660215a8630b34249fbb9d2d0da11c1733b5ee1bb65bf49ce47fc16659341"
 
 [metadata.files]
 click = [
@@ -146,6 +178,23 @@ MarkupSafe = [
     {file = "MarkupSafe-2.1.1-cp39-cp39-win32.whl", hash = "sha256:d4306c36ca495956b6d568d276ac11fdd9c30a36f1b6eb928070dc5360b22e1c"},
     {file = "MarkupSafe-2.1.1-cp39-cp39-win_amd64.whl", hash = "sha256:46d00d6cfecdde84d40e572d63735ef81423ad31184100411e6e3388d405e247"},
     {file = "MarkupSafe-2.1.1.tar.gz", hash = "sha256:7f91197cc9e48f989d12e4e6fbc46495c446636dfc81b9ccf50bb0ec74b91d4b"},
+]
+netifaces = [
+    {file = "netifaces-0.10.6-cp27-cp27m-win32.whl", hash = "sha256:137a77c2e0a68a3e409a532fe73340c3df6a59ffe8eb565ec8b1f0a131402d09"},
+    {file = "netifaces-0.10.6-cp27-cp27m-win_amd64.whl", hash = "sha256:ef223d45b73cc96c25a6295f471106b3195d2367b7f153e43490673d89e9240e"},
+    {file = "netifaces-0.10.6-cp34-cp34m-win32.whl", hash = "sha256:4ddf0f329d83516bba096b7eb1ad2ee354a98e2483f89ad3a590e653ece963c8"},
+    {file = "netifaces-0.10.6-cp34-cp34m-win_amd64.whl", hash = "sha256:61fd2706de21aac11475c921ba0fd98af19d5280702a11c5c8e2e910765dc378"},
+    {file = "netifaces-0.10.6-cp35-cp35m-win32.whl", hash = "sha256:48275e627ce9220acfed2e1ca1e4cf01f58940412f2aebac7995750b50232701"},
+    {file = "netifaces-0.10.6-cp35-cp35m-win_amd64.whl", hash = "sha256:f8b352247ae4b6731192d33fd35b27f247e3e4618a2d5cf65de41d46bbb53223"},
+    {file = "netifaces-0.10.6.tar.gz", hash = "sha256:0c4da523f36d36f1ef92ee183f2512f3ceb9a9d2a45f7d19cda5a42c6689ebe0"},
+]
+setuptools = [
+    {file = "setuptools-3.3-py2.py3-none-any.whl", hash = "sha256:4705222d7b1d308f67bd4a34ff2fb8a35b8a42f68ccb4a60586a2dd979665875"},
+    {file = "setuptools-3.3.tar.gz", hash = "sha256:f3e6155f9bb62bfd59b7f6cc2ecda21aae903e6b585f8bc55e801609c5f7814f"},
+    {file = "setuptools-3.3.zip", hash = "sha256:e085debac72b33ad95da3ed2523b01441e2fb1a5c9279ac3f9e1a78e4119aaf2"},
+]
+socketio = [
+    {file = "socketio-0.2.1.tar.gz", hash = "sha256:dee5abde39c6021d9d1874582479a4e7f8a8352b38bc7731fb6b27b76976f62c"},
 ]
 Werkzeug = [
     {file = "Werkzeug-2.2.2-py3-none-any.whl", hash = "sha256:f979ab81f58d7318e064e99c4506445d60135ac5cd2e177a2de0089bfd4c9bd5"},
