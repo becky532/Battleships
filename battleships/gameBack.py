@@ -26,7 +26,13 @@ class Board:
 
     def newBoard(self):
 
-        self.board = self.emptyBoard
+        self.board = [[0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0]]
 
     def printBoard(self):
 
@@ -48,7 +54,7 @@ class Board:
         placementValid = True
         if col + length <= self.lastIndex:
             for colInd in range(col, col + length):
-                if self.board[row][colInd] == 1:
+                if self.board[row][colInd] != 0:
                     placementValid = False
                     break
         else:
@@ -158,7 +164,6 @@ class Board:
     def randomiseBoard(self):
         if self.board != self.emptyBoard:
             self.clearBoard()
-            self.newBoard()
 
         listShip = list(self.shipsDict.keys())
         random.shuffle(listShip)
@@ -222,5 +227,12 @@ class Board:
 
 
 if __name__ == '__main__':
-    pass
-
+    board = Board()
+    board.placeShip(3, 3, 'Cruiser')
+    board.placeShip(2, 3, 'Submarine')
+    board.placeShip(0, 0, 'Carrier')
+    board.rotateShip('Carrier')
+    board.rotateShip('Submarine')
+    #board.printBoard()
+    board.randomiseBoard()
+    board.printBoard()

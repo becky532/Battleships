@@ -49,10 +49,7 @@ if __name__ == '__main__':
     game.secondPlayer.printBoard()
 
     noHit, ship, sunk = game.fire(1, 0)
-    noHit, ship, sunk = game.fire(1, 1)
-    print(noHit)
-    print(ship)
-    print(sunk)
+    noHit2, ship2, sunk2 = game.fire(1, 1)
     game.secondPlayer.printBoard()
 
 
