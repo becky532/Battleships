@@ -98,8 +98,8 @@ flex-wrap: nowrap;
 }
 .w > * {
   position: absolute;
-    height: 50px;
-    width: 50px;
+    height: 57px;
+    width: 57px;
     background: rgb(0, 48, 100, 0.21);
     transform-origin: bottom;
 }
@@ -577,26 +577,26 @@ flex-wrap: nowrap;
 }
 
 .carrier-container {
-  width: 250px;
-  height: 50px;
+  width: 285px;
+  height: 57px;
 
 }
 .carrier-containerR {
-  width: 50px;
-  height: 250px;
+  width: 57px;
+  height: 285px;
 
 }
 .carrierR {
   transform: rotate(90deg);
   position: relative;
-  width: 250px;
-  height: 50px;
+  width: 285px;
+  height: 57px;
   transform-origin: 10% 50%;
 }
 .carrier {
   position: relative;
-  width: 250px;
-  height: 50px;
+  width: 285px;
+  height: 57px;
 }
 .carrier-part {
   position: absolute;
@@ -738,23 +738,23 @@ flex-wrap: nowrap;
 }
 
 .battleship-container {
-  width: 200px;
-  height: 50px;
+  width: 228px;
+  height: 57px;
 }
 .battleship-containerR {
-  width: 50px;
-  height: 200px;
+  width: 57px;
+  height: 228px;
 }
 .battleship {
   position: relative;
-  width: 200px;
-  height: 50px;
+  width: 228px;
+  height: 57px;
 }
 .battleshipR {
   transform: rotate(90deg);
   position: relative;
-  width: 200px;
-  height: 50px;
+  width: 228px;
+  height: 57px;
   transform-origin: 12.50% 50%;
 }
 .battleship-part {
@@ -891,23 +891,23 @@ flex-wrap: nowrap;
 
 
 .cruiser-container{
-  width: 150px;
-  height: 50px;
+  width: 171px;
+  height: 57px;
 }
 .cruiser-containerR{
-  width: 50px;
-  height: 150px;
+  width: 57px;
+  height: 171px;
 }
 .cruiser {
   position: relative;
-  width: 150px;
-  height: 50px;
+  width: 171px;
+  height: 57px;
 }
 .cruiserR {
   transform: rotate(90deg);
   position: relative;
-  width: 150px;
-  height: 50px;
+  width: 171px;
+  height: 57px;
   transform-origin: 16.6% 50%;
 }
 .cruiser-part {
@@ -1001,23 +1001,23 @@ flex-wrap: nowrap;
 }
 
 .submarine-container {
-  width: 150px;
-  height: 50px;
+  width: 171px;
+  height: 57px;
 }
 .submarine-containerR {
-  width: 50px;
-  height: 150px;
+  width: 57px;
+  height: 171px;
 }
 .submarine {
   position: relative;
-  width: 150px;
-  height: 50px;
+  width: 171px;
+  height: 57px;
 }
 .submarineR {
   transform: rotate(90deg);
   position: relative;
-  width: 150px;
-  height: 50px;
+  width: 171px;
+  height: 57px;
   transform-origin: 16.6% 50%;
 }
 .submarine-part {
@@ -1085,24 +1085,24 @@ flex-wrap: nowrap;
 
 
 .destroyer-container {
-  width: 100px;
-  height: 50px;
+  width: 114px;
+  height: 57px;
 }
 .destroyer-containerR {
-  width: 50px;
-  height: 100px;
+  width: 57px;
+  height: 114px;
 }
 .destroyer {
   position: relative;
-  width: 100px;
-  height: 50px;
+  width: 114px;
+  height: 57px;
 }
 .destroyerR {
 
   transform: rotate(90deg);
   position: relative;
-  width: 100px;
-  height: 50px;
+  width: 114px;
+  height: 57px;
   transform-origin: 25% 50%;
 }
 .destroyer-part {
@@ -1153,8 +1153,8 @@ flex-wrap: nowrap;
   fire
 **********/
 .fire {
-  width: 50px;
-  height: 50px;
+  width: 57px;
+  height: 57px;
   position: absolute;
   pointer-events: none;
 }
@@ -1400,24 +1400,24 @@ flex-wrap: nowrap;
 .hole1{
  transform:translate(-10px, 40px);
  position: absolute;
- height:50px;
- width:50px;
+ height:57px;
+ width:57px;
  background-color:black;
  clip-path: polygon(50% 17%, 62% 31%, 98% 35%, 73% 58%,   65% 79%, 48% 80%, 23% 85%, 20% 56%, 2% 35%, 30% 29%);
 }
 .hole2{
  transform:translate(-10px, 40px);
  position: absolute;
- height:50px;
- width:50px;
+ height:57px;
+ width:57px;
  background-color:grey;
  clip-path: polygon(27% 14%, 66% 13%, 82% 31%, 90% 69%, 69% 85%, 49% 94%, 35% 82%, 14% 82%, 20% 56%, 9% 38%);
 }
 .hole3{
  transform:translate(-10px, 40px);
  position: absolute;
- height:50px;
- width:50px;
+ height:57px;
+ width:57px;
  background-color:rgb(36, 35, 35);
  box-shadow: inset 5px 5px black;
 }
