@@ -174,12 +174,13 @@ class Board:
 
         return listShip
 
-    def findSquare(self, row, col):
+    def checkHit(self, row, col):
         value = self.board[row][col]
-        noHit = False
+        hit = True
         if value == 0:
-            noHit = True
+            hit = False
             shipHit = None
+            self.board[row][col] = '.'
         elif value == 1:
             shipHit = 'Carrier'
             self.knockOutCell(shipHit, row, col)
@@ -197,12 +198,26 @@ class Board:
             shipHit = 'Destroyer'
             self.knockOutCell(shipHit, row, col)
 
-        return noHit, shipHit
+        return hit, shipHit
 
     def knockOutCell(self, ship, row, col):
         cell = self.shipsDict[ship]['position'].index([row, col])
         self.shipsDict[ship]['position'][cell] = 'X'
         self.board[row][col] = 'X'
+
+    def checkSunk(self, shipType):
+        shipSunk = False
+        if shipType is not None:
+            ship = self.shipsDict[shipType]
+            position = ship['position']
+            length = ship['length']
+
+            if position == ['X']*length:
+                shipSunk = True
+
+        return shipSunk
+
+
 
 
 

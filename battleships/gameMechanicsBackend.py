@@ -26,13 +26,14 @@ class Game:
 
         if self.currentPlayer == self.firstPlayer:
             #if cell not alread chosen then try otherwise return already used
-            hit, shipHit = self.secondPlayer.findSquare(row, col)
-            # in console if hit is True, then replace with an x or if hit is false replace with a .
+            hit, shipHit = self.secondPlayer.checkHit(row, col)
+            shipSunk = self.secondPlayer.checkSunk(shipHit)
             #if ship now destroyed then return shipSunk
         else:
-            hit, shipHit = self.firstPlayer.findSquare(row, col)
+            hit, shipHit = self.firstPlayer.checkHit(row, col)
+            shipSunk = self.firstPlayer.checkSunk(shipHit)
 
-        return hit, shipHit
+        return hit, shipHit, shipSunk
 
 
 if __name__ == '__main__':
@@ -47,10 +48,13 @@ if __name__ == '__main__':
     game = Game(firstBoard, secondBoard)
     game.secondPlayer.printBoard()
 
-    noHit, ship = game.fire(0, 0)
+    noHit, ship, sunk = game.fire(1, 0)
+    noHit, ship, sunk = game.fire(1, 1)
     print(noHit)
     print(ship)
+    print(sunk)
     game.secondPlayer.printBoard()
+    
 
 
 
