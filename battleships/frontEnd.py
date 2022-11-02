@@ -8,7 +8,6 @@ app.config['SECRET_KEY'] = 'TeamTitanic'
 
 @app.route('/')
 def main():
-
     return render_template('battleship.html')
 
 @app.route('/validDrop/<coord>')
