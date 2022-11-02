@@ -1,14 +1,4 @@
-from gameBack import Board
-from enum import Enum, auto
-
-# class Player(Enum):
-#
-#     firstPlayer = auto()
-#     secondPlayer = auto()
-#
-#     def opponent(self):
-#         if self == Player.firstPlayer: return Player.secondPlayer
-#         else: return Player.firstPlayer
+from battleships.gameBack import Board
 
 class Game:
     def __init__(self, board1: Board, board2: Board):
@@ -33,12 +23,15 @@ class Game:
 
                 hit, shipHit = self.secondPlayer.checkHit(row, col)
                 shipSunk = self.secondPlayer.checkSunk(shipHit)
+                gameOver = self.firstPlayer.checkDefeated()
 
             else:
                 hit, shipHit = self.firstPlayer.checkHit(row, col)
                 shipSunk = self.firstPlayer.checkSunk(shipHit)
+                gameOver = self.firstPlayer.checkDefeated()
 
-            self.switchPlayer()
+            if gameOver == False:
+                self.switchPlayer()
         else:
             validHit = False
 
@@ -48,11 +41,13 @@ class Game:
             self.firstPlayer.printBoard()
         else:
             self.secondPlayer.printBoard()
+    def checkGameOver(self):
+        if self.currentPlayer == self.firstPlayer:
+            gameOver = self.secondPlayer.checkDefeated()
+        else:
+            gameOver = self.firstPlayer.checkDefeated()
 
-    # def checkGameOver(self):
-    #
-
-
+        return gameOver
 
 if __name__ == '__main__':
     pass

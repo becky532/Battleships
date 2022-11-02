@@ -4,7 +4,7 @@ import random
 class Board:
 
     def __init__(self):
-        self.board = []
+
         self.emptyBoard = [[0, 0, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0],
@@ -207,8 +207,6 @@ class Board:
 
             return hit, shipHit
 
-
-
     def knockOutCell(self, ship, row, col):
         cell = self.shipsDict[ship]['position'].index([row, col])
         self.shipsDict[ship]['position'][cell] = 'X'
@@ -226,17 +224,18 @@ class Board:
 
         return shipSunk
 
+    def checkDefeated(self):
+        listCells = []
+        for i in range(7):
+            for j in range(7):
+                listCells.append(self.board[i][j])
+        allShipsDestroyed = listCells.count('X')
+        if allShipsDestroyed == 17:
+            gameOver = True
+        else:
+            gameOver = False
 
-
-
+        return gameOver
 
 if __name__ == '__main__':
-    board = Board()
-    board.placeShip(3, 3, 'Cruiser')
-    board.placeShip(2, 3, 'Submarine')
-    board.placeShip(0, 0, 'Carrier')
-    board.rotateShip('Carrier')
-    board.rotateShip('Submarine')
-    #board.printBoard()
-    board.randomiseBoard()
-    board.printBoard()
+    pass

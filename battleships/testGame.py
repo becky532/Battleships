@@ -32,5 +32,8 @@ while gameOver == False:
                         print(f"You hit your oppenent's {shipHit}")
                 else:
                     print("You missed")
+                gameOver = battleships.checkGameOver()
             else:
                 print("Invalid cell. Try again")
+
+    print(f"Game is over. {currentPlayer} has won the game!")
