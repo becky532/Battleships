@@ -1,19 +1,17 @@
 import logging
 import random
 
-
-# class Player:
-#
-#     first
-#     def opponent(self):
-#         if self == Player.firstPlayer:
-#             return Player.secondPlayer
-#         else:
-#             return Player.WHITE
 class Board:
 
     def __init__(self):
         self.board = []
+        self.emptyBoard = [[0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0]]
         self.shipsDict = {'Carrier': {'length': 5, 'position': [], 'orientation': '', 'value': 1},
                           'Battleship': {'length': 4, 'position': [], 'orientation': '', 'value': 2},
                           'Cruiser': {'length': 3, 'position': [], 'orientation': '', 'value': 3},
@@ -24,17 +22,11 @@ class Board:
         logging.basicConfig(filename='battleships.log', level=logging.INFO, filemode='w', force=True)
         self.boardSize = 7
         self.lastIndex = 6
+        self.newBoard()
 
     def newBoard(self):
 
-        self.board = [[0, 0, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 0, 0]]
-
+        self.board = self.emptyBoard
 
     def printBoard(self):
 
@@ -126,7 +118,7 @@ class Board:
 
             self.__rotate(shipType, checkCells)
             self.shipsDict[shipType]['orientation'] = 'vertical'
-        elif shipOrientation == 'vertical' and len(checkCells == shipLength):
+        elif shipOrientation == 'vertical' and len(checkCells) == shipLength:
 
             self.__rotate(shipType, checkCells)
             self.shipsDict[shipType]['orientation'] = 'horizontal'
@@ -164,6 +156,10 @@ class Board:
         logging.info(f"Piece {shipType} has been rotated")
 
     def randomiseBoard(self):
+        if self.board != self.emptyBoard:
+            self.clearBoard()
+            self.newBoard()
+
         listShip = list(self.shipsDict.keys())
         random.shuffle(listShip)
         for ship in listShip:
@@ -176,19 +172,40 @@ class Board:
             if rotate == 1:
                 self.rotateShip(ship)
 
-
         return listShip
 
-if __name__ == '__main__':
+    def findSquare(self, row, col):
+        value = self.board[row][col]
+        noHit = False
+        if value == 0:
+            noHit = True
+            shipHit = None
+        elif value == 1:
+            shipHit = 'Carrier'
+            self.knockOutCell(shipHit, row, col)
+        elif value == 2:
+            shipHit = 'Battleship'
+            self.knockOutCell(shipHit, row, col)
 
-    board = Board()
-    board.newBoard()
-    # board.placeShip(0, 0, 'Carrier')
-    # board.placeShip(1, 0, 'Battleship')
-    # board.printBoard()
-    # board.clearBoard()
-    # board.printBoard()
-    board.randomiseBoard()
-    board.printBoard()
-    print(board.shipsDict)
+        elif value == 3:
+            shipHit = 'Cruiser'
+            self.knockOutCell(shipHit, row, col)
+        elif value == 4:
+            shipHit = 'Submarine'
+            self.knockOutCell(shipHit, row, col)
+        else:
+            shipHit = 'Destroyer'
+            self.knockOutCell(shipHit, row, col)
+
+        return noHit, shipHit
+
+    def knockOutCell(self, ship, row, col):
+        cell = self.shipsDict[ship]['position'].index([row, col])
+        self.shipsDict[ship]['position'][cell] = 'X'
+        self.board[row][col] = 'X'
+
+
+
+if __name__ == '__main__':
+    pass
 
