@@ -1,6 +1,6 @@
 from flask_socketio import SocketIO, send
 from flask import Flask, render_template
-from gameBack import board
+from gameBack import Board
 
 server = Flask(__name__)
 server.config['SECRET_KEY'] = 'TeamTitanic'

@@ -1,10 +1,8 @@
 from flask import render_template, Blueprint, Flask
 import json
-from flask_socketio import SocketIO, send
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'TeamTitanic'
-
 
 @app.route('/')
 def main():
@@ -19,7 +17,6 @@ def checkCoord(coord):
 
 
 if __name__ == "__main__":
-    socketio = SocketIO(app)
     app.run()
     # socketio.run(app, allow_unsafe_werkzeug=True)
 
