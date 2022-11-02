@@ -1,25 +1,18 @@
-from gameBack import Game
+from gameBack import Board
 
-game = Game()
-game.createBoard()
+firstPlayerBoard = Board()
+secondPlayerBoard = Board()
 
-game.placeShip(1, 1, 'Carrier')
-print(game.shipsDict['Carrier'])
-game.placeShip(0, 1, 'Battleship')
-print(game.board)
-game.rotateShip('Carrier')
-print(game.shipsDict['Carrier'])
+firstPlayerBoard.newBoard()
+whichPiece = input('What piece would you like to put down?')
 
-def checkRotation(self, length, row, col, orientation, point):
+if whichPiece == 'Random':
+    firstPlayerBoard.randomiseBoard()
 
-    checkCells = [point]
-    for index in range(1, length):
-        if orientation == 'horizontal':
-            newCell = [row + index, col]
-        else:
-            newCell = [row, col + index]
-        if self.board[newCell[0]][newCell[1]] == 0 and newCell[0] <= self.lastIndex:
-            checkCells.append(newCell)
-        else:
-            break
-    return
+# secondPlayerBoard.newBoard()
+# secondPlayerBoard.placeShip(2, 1, 'Destroyer')
+#
+firstPlayerBoard.printBoard()
+# print()
+# secondPlayerBoard.printBoard()
+

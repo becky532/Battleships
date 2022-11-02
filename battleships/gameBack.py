@@ -4,12 +4,12 @@ import random
 
 # class Player:
 #
-#     WHITE = auto()
-#     BLACK = auto()
-#
+#     first
 #     def opponent(self):
-#         if self == Player.WHITE: return Player.BLACK
-#         else: return Player.WHITE
+#         if self == Player.firstPlayer:
+#             return Player.secondPlayer
+#         else:
+#             return Player.WHITE
 class Board:
 
     def __init__(self):
@@ -27,8 +27,6 @@ class Board:
 
     def newBoard(self):
 
-        # for row in range(self.boardSize):
-        #     self.board.append([0] * self.boardSize)
         self.board = [[0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0],
