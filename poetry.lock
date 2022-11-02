@@ -1,0 +1,17 @@
+[[package]]
+name = "grpc"
+version = "1.0.0"
+description = "Please install the official package with: pip install grpcio"
+category = "main"
+optional = false
+python-versions = "*"
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.10"
+content-hash = "ccb8c80f1d3e225549ed6d7fd8e88a6f511a6eb186db6393a2b6daedd6da245a"
+
+[metadata.files]
+grpc = [
+    {file = "grpc-1.0.0.tar.gz", hash = "sha256:e1aa035512b1cc8d5ce84685f30eae463dad9123d858f5676b1159a2b80eea86"},
+]
