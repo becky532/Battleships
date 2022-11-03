@@ -24,11 +24,13 @@ class Game:
                 hit, shipHit = self.secondPlayer.checkHit(row, col)
                 shipSunk = self.secondPlayer.checkSunk(shipHit)
                 gameOver = self.secondPlayer.checkDefeated()
+                self.firstPlayer.listAttacks(row, col)
 
             else:
                 hit, shipHit = self.firstPlayer.checkHit(row, col)
                 shipSunk = self.firstPlayer.checkSunk(shipHit)
                 gameOver = self.firstPlayer.checkDefeated()
+                self.secondPlayer.listAttacks(row, col)
 
             if gameOver == False:
                 self.switchPlayer()

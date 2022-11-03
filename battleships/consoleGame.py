@@ -68,6 +68,10 @@ def game():
                 except ValueError:
                     print("Invalid input!")
                     continue
+                else:
+                    if [row, col] in battleships.currentPlayer.listChosenCells:
+                        print("Have already chosen to attack this cell")
+                        continue
 
                 validHit, hit, shipHit, shipSunk = battleships.fire(row, col)
                 if validHit == True:
