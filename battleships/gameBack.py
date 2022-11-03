@@ -55,7 +55,7 @@ class Board:
         return self.shipsDict
     def printBoard(self, player):
 
-        board, shipDict = self.checkBoard(player)
+        board = self.checkBoard(player)[0]
 
         listRows = [6, 5, 4, 3, 2, 1, 0]
 
@@ -73,7 +73,7 @@ class Board:
 
     def validateInitialPlacement(self, length, row, col, player):
 
-        board, shipDict = self.checkBoard(player)
+        board = self.checkBoard(player)[0]
 
         placementValid = True
         if col + length <= self.lastIndex:
@@ -103,7 +103,6 @@ class Board:
 
     def placeShip(self, row, col, shipType, player):
 
-        #board = self.checkBoard(player)[0]
         shipDict = self.checkBoard(player)[1]
 
         if row <= self.lastIndex and col <= self.lastIndex:
@@ -214,7 +213,6 @@ class Board:
 
     def __rotate(self, shipType, newPosition, player):
 
-        board = self.checkBoard(player)[0]
         shipDict = self.checkBoard(player)[1]
 
         self.remove(shipType, player)
@@ -248,7 +246,6 @@ class Board:
     def checkHit(self, row, col, player):
 
         board = self.checkBoard(player)[0]
-        shipDict = self.checkBoard(player)[1]
 
         if row <= self.lastIndex and col <= self.lastIndex:
             value = board[row][col]
@@ -288,7 +285,6 @@ class Board:
 
     def checkSunk(self, shipType, player):
 
-        board = self.checkBoard(player)[0]
         shipDict = self.checkBoard(player)[1]
 
         shipSunk = False
