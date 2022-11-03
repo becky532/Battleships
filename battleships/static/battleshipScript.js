@@ -67,11 +67,6 @@ dropzone.addEventListener("drop", (event)=> {
     dropValid()
 });
 
-//async function dropValid(){
-//    const response = await fetch("/validDrop/" + boatSelected.gridCoord);
-//    let isValid = await response.json();
-//    return isValid;
-//}
 
 function dropValid(){
     boat = [boatSelected.gridCoord, boatSelected.shipName];

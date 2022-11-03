@@ -7,15 +7,6 @@ server.config['SECRET_KEY'] = 'TeamTitanic'
 socketio = SocketIO(server, cors_allowed_origins='*')
 
 
-@socketio.on('message')
-def handleMessage(msg):
-    print(msg)
-    # gameback function
-    send(msg, broadcast=True) #player 2 sent (coord, if hit)
-
-    # can we return data to player 1?
-
-
 @socketio.on('connect')
 def connect():
     sid = request.sid
@@ -23,7 +14,6 @@ def connect():
     userID = ''
     for index, user in enumerate(users):
         if user is None:
-            userID = sid        # check userID '' later and disconnect connection if so
             users[index] = sid
             break
 
