@@ -1,48 +1,11 @@
 from gameBack import Board
-import os
 
-firstPlayerBoard = Board()
-secondPlayerBoard = Board()
-
-def menu():
-    print("Hello!")
-    print("Lets go on an adventure!")
-    option = input('''
-                                 ______________________________________________
-                              .-'                     _                        '.
-                            .'                       |-'                        |
-                          .'                         |                          |
-                       _.'               p         _\_/_         p              |
-                    _.'                  |       .'  |  '.       |              |
-               __..'                     |      /    |    \      |              |
-         ___..'                         .T\    ======+======    /T.             |
-      ;;;\::::                        .' | \  /      |      \  / | '.           |
-      ;;;|::::                      .'   |  \/       |       \/  |   '.         |
-      ;;;/::::                    .'     |   \       |        \  |     '.       |
-            ''.__               .'       |    \      |         \ |       '.     |
-                 ''._          <_________|_____>_____|__________>|_________>    |
-                     '._     (___________|___________|___________|___________)  |
-                        '.    \;;;;;;;;;;o;;;;;o;;;;;o;;;;;o;;;;;o;;;;;o;;;;/   |
-                          '.~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~   |
-                            '. ~ ~ ~ ~ ~ ~ ~ ~ ~Battleship ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  |
-                              '-.______________________________________________.'
-    
-    
-    What mode you want to play? :
-    1) Player VS Player
-    2) Player VS Random
-    ''')
-
-    if option == '1':
-        firstPlayerSetup()
-        secondPlayerSetup()
-    else:
-        return
 
 def firstPlayerSetup():
 
     print("Player1 Setup")
 
+    firstPlayerBoard = Board()
     firstPlayerBoard.newBoard()
     listFirstPlayerPieces = list(firstPlayerBoard.shipsDict.keys())
     firstPlayerBoard.printBoard()
@@ -79,11 +42,14 @@ def firstPlayerSetup():
             firstPlayerBoard.printBoard()
             listFirstPlayerPieces.remove(whichShip)
 
+    return firstPlayerBoard
+
 
 def secondPlayerSetup():
 
-    print("Player1 Setup")
+    print("Player2 Setup")
 
+    secondPlayerBoard = Board()
     secondPlayerBoard.newBoard()
     listSecondPlayerPieces = list(secondPlayerBoard.shipsDict.keys())
     secondPlayerBoard.printBoard()
@@ -112,7 +78,7 @@ def secondPlayerSetup():
 
 
 
-        validPosition = firstPlayerBoard.placeShip(row, col, shipType)
+        validPosition = secondPlayerBoard.placeShip(row, col, shipType)
         if validPosition == False:
             print("Cannot place ship here")
             continue
@@ -120,5 +86,6 @@ def secondPlayerSetup():
             secondPlayerBoard.printBoard()
             listSecondPlayerPieces.remove(whichShip)
 
+    return secondPlayerBoard
 
-menu()
+
