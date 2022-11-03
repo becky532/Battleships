@@ -3,8 +3,19 @@ import random
 
 class Board:
 
+    _instance = None
     def __init__(self):
+        raise RuntimeError('Call instance() instead')
+    @classmethod
+    def instance(cls):
+        if cls._instance is None:
+            logging.basicConfig(filename='battleships.log', level=logging.INFO, filemode='w', force=True)
+            logging.info('Creating new instance')
+            cls._instance = cls.__new__(cls)
+            cls._instance.initialise()
+        return cls._instance
 
+    def initialise(self):
         self.emptyBoard = [[0, 0, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0],
@@ -12,18 +23,16 @@ class Board:
                            [0, 0, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0]]
-        self.shipsDict = {'Carrier': {'length': 5, 'position': [], 'orientation': '', 'value': 1},
-                          'Battleship': {'length': 4, 'position': [], 'orientation': '', 'value': 2},
-                          'Cruiser': {'length': 3, 'position': [], 'orientation': '', 'value': 3},
-                          'Submarine': {'length': 3, 'position': [], 'orientation': '', 'value': 4},
-                          'Destroyer': {'length': 2, 'position': [], 'orientation': '', 'value': 5}
-                          }
-        self.player = 1
-        logging.basicConfig(filename='battleships.log', level=logging.INFO, filemode='w', force=True)
+
         self.boardSize = 7
         self.lastIndex = 6
-        self.newBoard()
+        self.firstPlayer = self.newBoard()
+        self.secondPlayer = self.newBoard()
         self.listChosenCells = []
+        self.firstPlayerDict = self.newShipDict()
+        self.secondPlayerDict = self.newShipDict()
+        self.firstPlayerList = []
+        self.secondPlayerList = []
 
     def newBoard(self):
 
@@ -34,14 +43,25 @@ class Board:
                            [0, 0, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0]]
+        return self.board
 
-    def printBoard(self):
+    def newShipDict(self):
+        self.shipsDict = {'Carrier': {'length': 5, 'position': [], 'orientation': '', 'value': 1},
+                          'Battleship': {'length': 4, 'position': [], 'orientation': '', 'value': 2},
+                          'Cruiser': {'length': 3, 'position': [], 'orientation': '', 'value': 3},
+                          'Submarine': {'length': 3, 'position': [], 'orientation': '', 'value': 4},
+                          'Destroyer': {'length': 2, 'position': [], 'orientation': '', 'value': 5}
+                          }
+        return self.shipsDict
+    def printBoard(self, player):
+
+        board, shipDict = self.checkBoard(player)
 
         listRows = [6, 5, 4, 3, 2, 1, 0]
 
         for row in listRows:
             print(str(row) + '--', end='')
-            for column in self.board[row]:
+            for column in board[row]:
                 print(str(column) + ' ', end='')
             print()
         print('   ' + '|', '|', '|', '|', '|', '|', '|')
@@ -51,12 +71,14 @@ class Board:
             print(str(i) + ' ', end='')
         print()
 
-    def validateInitialPlacement(self, length, row, col):
+    def validateInitialPlacement(self, length, row, col, player):
+
+        board, shipDict = self.checkBoard(player)
 
         placementValid = True
         if col + length <= self.lastIndex:
             for colInd in range(col, col + length):
-                if self.board[row][colInd] != 0:
+                if board[row][colInd] != 0:
                     placementValid = False
                     break
         else:
@@ -65,22 +87,38 @@ class Board:
 
         return placementValid
 
-    def placeShip(self, row, col, shipType):
-        #could be less than 0
+
+    def checkBoard(self, player):
+
+        if player == '1':
+            board = self.firstPlayer
+            shipDict = self.firstPlayerDict
+            chosenCells = self.firstPlayerList
+        else:
+            board = self.secondPlayer
+            shipDict = self.secondPlayerDict
+            chosenCells = self.secondPlayerList
+
+        return [board, shipDict, chosenCells]
+
+    def placeShip(self, row, col, shipType, player):
+
+        #board = self.checkBoard(player)[0]
+        shipDict = self.checkBoard(player)[1]
 
         if row <= self.lastIndex and col <= self.lastIndex:
-            shipLength = self.shipsDict[shipType]['length']
-            placementValid = self.validateInitialPlacement(shipLength, row, col)
+            shipLength = shipDict[shipType]['length']
+            placementValid = self.validateInitialPlacement(shipLength, row, col, player)
 
             if placementValid == True:
                 logging.info(f'Valid placement of {shipType}')
-                shipLength = self.shipsDict[shipType]["length"]
+                shipLength = shipDict[shipType]["length"]
 
                 for cellCol in range(col, col + shipLength):
-                    self.shipsDict[shipType]['position'].append([row, cellCol])
+                    shipDict[shipType]['position'].append([row, cellCol])
 
-                self.place(shipType)
-                self.shipsDict[shipType]['orientation'] = 'horizontal'
+                self.place(shipType, player)
+                shipDict[shipType]['orientation'] = 'horizontal'
             else:
                 logging.info(f'Invalid placement of {shipType}')
 
@@ -90,53 +128,71 @@ class Board:
 
         return placementValid
 
-    def remove(self, shipType):
-        position = self.shipsDict[shipType]['position']
+    def remove(self, shipType, player):
+        board = self.checkBoard(player)[0]
+        shipDict = self.checkBoard(player)[1]
+
+        position = shipDict[shipType]['position']
         for cell in position:
-            self.board[cell[0]][cell[1]] = 0
-        self.shipsDict[shipType]['position'] = []
+            board[cell[0]][cell[1]] = 0
+        shipDict[shipType]['position'] = []
 
-    def place(self, shipType):
-        position = self.shipsDict[shipType]['position']
-        value = self.shipsDict[shipType]['value']
+    def place(self, shipType, player):
+        board = self.checkBoard(player)[0]
+        shipDict = self.checkBoard(player)[1]
+
+        position = shipDict[shipType]['position']
+        value = shipDict[shipType]['value']
 
         for cell in position:
-            self.board[cell[0]][cell[1]] = value
+            board[cell[0]][cell[1]] = value
 
-    def clearBoard(self):
-        self.newBoard()
-        for ship in self.shipsDict:
-            self.shipsDict[ship]['position'] = []
-            self.shipsDict[ship]['orientation'] = 'horizontal'
+    def clearBoard(self, player):
 
+        board = self.checkBoard(player)[0]
+        shipDict = self.checkBoard(player)[1]
 
-    def rotateShip(self, shipType):
-        shipPosition = self.shipsDict[shipType]['position']
+        for i in range(7):
+            for j in range(7):
+                board[i][j] = 0
+
+        for ship in shipDict:
+            shipDict[ship]['position'] = []
+            shipDict[ship]['orientation'] = 'horizontal'
+
+    def rotateShip(self, shipType, player):
+
+        shipDict = self.checkBoard(player)[1]
+
+        shipPosition = shipDict[shipType]['position']
         rotatingPoint = shipPosition[0]
-        shipLength = self.shipsDict[shipType]['length']
-        shipOrientation = self.shipsDict[shipType]['orientation']
+        shipLength = shipDict[shipType]['length']
+        shipOrientation = shipDict[shipType]['orientation']
         rotationValid = True
 
         shipCol = shipPosition[0][1]
         shipRow = shipPosition[0][0]
 
-        checkCells = self.__checkRotation(shipLength, shipRow, shipCol, shipOrientation, rotatingPoint)
+        checkCells = self.__checkRotation(shipLength, shipRow, shipCol, shipOrientation, rotatingPoint, player)
 
         if shipOrientation == 'horizontal' and len(checkCells) == shipLength:
 
-            self.__rotate(shipType, checkCells)
-            self.shipsDict[shipType]['orientation'] = 'vertical'
+            self.__rotate(shipType, checkCells, player)
+            shipDict[shipType]['orientation'] = 'vertical'
+
         elif shipOrientation == 'vertical' and len(checkCells) == shipLength:
 
-            self.__rotate(shipType, checkCells)
-            self.shipsDict[shipType]['orientation'] = 'horizontal'
+            self.__rotate(shipType, checkCells, player)
+            shipDict[shipType]['orientation'] = 'horizontal'
         else:
             logging.info(f"Ship {shipType} could not be rotated")
             rotationValid = False
 
         return rotationValid
 
-    def __checkRotation(self, length, row, col, orientation, point):
+    def __checkRotation(self, length, row, col, orientation, point, player):
+
+        board = self.checkBoard(player)[0]
 
         checkCells = [point]
         for index in range(1, length):
@@ -147,7 +203,7 @@ class Board:
 
             if newCell[0] <= self.lastIndex and newCell[1] <= self.lastIndex:
 
-                if self.board[newCell[0]][newCell[1]] == 0:
+                if board[newCell[0]][newCell[1]] == 0:
                     checkCells.append(newCell)
                 else:
                     break
@@ -156,68 +212,88 @@ class Board:
 
         return checkCells
 
-    def __rotate(self, shipType, newPosition):
-        self.remove(shipType)
-        self.shipsDict[shipType]['position'] = newPosition
-        self.place(shipType)
-        self.shipsDict[shipType]['orientation'] = 'vertical'
+    def __rotate(self, shipType, newPosition, player):
+
+        board = self.checkBoard(player)[0]
+        shipDict = self.checkBoard(player)[1]
+
+        self.remove(shipType, player)
+        shipDict[shipType]['position'] = newPosition
+        self.place(shipType, player)
+        shipDict[shipType]['orientation'] = 'vertical'
         logging.info(f"Piece {shipType} has been rotated")
 
-    def randomiseBoard(self):
-        if self.board != self.emptyBoard:
-            self.clearBoard()
+    def randomiseBoard(self, player):
 
-        listShip = list(self.shipsDict.keys())
+        board = self.checkBoard(player)[0]
+        shipDict = self.checkBoard(player)[1]
+
+        if board != self.emptyBoard:
+            self.clearBoard(player)
+
+        listShip = list(shipDict.keys())
         random.shuffle(listShip)
         for ship in listShip:
             shipPlace = False
             while shipPlace == False:
                 row = random.randint(0, 6)
                 col = random.randint(0, 6)
-                shipPlace = self.placeShip(row, col, ship)
+                shipPlace = self.placeShip(row, col, ship, player)
             rotate = random.randint(0, 1)
             if rotate == 1:
-                self.rotateShip(ship)
+                self.rotateShip(ship, player)
 
         return listShip
 
-    def checkHit(self, row, col):
-        if row <= self.lastIndex and col<=self.lastIndex:
-            value = self.board[row][col]
+    def checkHit(self, row, col, player):
+
+        board = self.checkBoard(player)[0]
+        shipDict = self.checkBoard(player)[1]
+
+        if row <= self.lastIndex and col <= self.lastIndex:
+            value = board[row][col]
             hit = True
+
             if value == 0:
                 hit = False
                 shipHit = None
-                self.board[row][col] = '.'
+                board[row][col] = '.'
             elif value == 1:
                 shipHit = 'Carrier'
-                self.knockOutCell(shipHit, row, col)
+                self.knockOutCell(shipHit, row, col, player)
             elif value == 2:
                 shipHit = 'Battleship'
-                self.knockOutCell(shipHit, row, col)
+                self.knockOutCell(shipHit, row, col, player)
 
             elif value == 3:
                 shipHit = 'Cruiser'
-                self.knockOutCell(shipHit, row, col)
+                self.knockOutCell(shipHit, row, col, player)
             elif value == 4:
                 shipHit = 'Submarine'
-                self.knockOutCell(shipHit, row, col)
+                self.knockOutCell(shipHit, row, col, player)
             else:
                 shipHit = 'Destroyer'
-                self.knockOutCell(shipHit, row, col)
+                self.knockOutCell(shipHit, row, col, player)
 
             return hit, shipHit
 
-    def knockOutCell(self, ship, row, col):
+    def knockOutCell(self, ship, row, col, player):
 
-        cell = self.shipsDict[ship]['position'].index([row, col])
-        self.shipsDict[ship]['position'][cell] = 'X'
-        self.board[row][col] = 'X'
+        board = self.checkBoard(player)[0]
+        shipDict = self.checkBoard(player)[1]
 
-    def checkSunk(self, shipType):
+        cell = shipDict[ship]['position'].index([row, col])
+        shipDict[ship]['position'][cell] = 'X'
+        board[row][col] = 'X'
+
+    def checkSunk(self, shipType, player):
+
+        board = self.checkBoard(player)[0]
+        shipDict = self.checkBoard(player)[1]
+
         shipSunk = False
         if shipType is not None:
-            ship = self.shipsDict[shipType]
+            ship = shipDict[shipType]
             position = ship['position']
             length = ship['length']
 
@@ -226,11 +302,14 @@ class Board:
 
         return shipSunk
 
-    def checkDefeated(self):
+    def checkDefeated(self, player):
+
+        board = self.checkBoard(player)[0]
+
         listCells = []
         for i in range(7):
             for j in range(7):
-                listCells.append(self.board[i][j])
+                listCells.append(board[i][j])
         allShipsDestroyed = listCells.count('X')
         if allShipsDestroyed == 17:
             gameOver = True
@@ -239,8 +318,9 @@ class Board:
 
         return gameOver
 
-    def listAttacks(self, row, col):
-        self.listChosenCells.append([row, col])
+    def listAttacks(self, row, col, player):
+        listChosenCells = self.checkBoard(player)[2]
+        listChosenCells.append([row, col])
 
 if __name__ == '__main__':
     pass
