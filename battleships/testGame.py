@@ -7,10 +7,8 @@ secondPlayerBoard = Board()
 secondPlayerBoard.randomiseBoard()
 
 battleships = Game(firstPlayerBoard, secondPlayerBoard)
+
 gameOver = False
-
-
-
 while gameOver == False:
 
     if battleships.currentPlayer == battleships.firstPlayer:
@@ -31,6 +29,10 @@ while gameOver == False:
             except ValueError:
                 print("Invalid input!")
                 continue
+            else:
+                if [row, col] in battleships.currentPlayer.listChosenCells:
+                    print("Have already chosen to attack this cell")
+                    continue
 
             validHit, hit, shipHit, shipSunk = battleships.fire(row, col)
             if validHit == True:
@@ -45,6 +47,5 @@ while gameOver == False:
                     print("You missed")
             else:
                 print("Invalid cell. Try again")
-        print(battleships.currentPlayer)
 
 print(f"Game is over. {currentPlayer} has won the game!")

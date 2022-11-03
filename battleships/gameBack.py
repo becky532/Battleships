@@ -23,6 +23,7 @@ class Board:
         self.boardSize = 7
         self.lastIndex = 6
         self.newBoard()
+        self.listChosenCells = []
 
     def newBoard(self):
 
@@ -208,6 +209,7 @@ class Board:
             return hit, shipHit
 
     def knockOutCell(self, ship, row, col):
+
         cell = self.shipsDict[ship]['position'].index([row, col])
         self.shipsDict[ship]['position'][cell] = 'X'
         self.board[row][col] = 'X'
@@ -236,6 +238,9 @@ class Board:
             gameOver = False
 
         return gameOver
+
+    def listAttacks(self, row, col):
+        self.listChosenCells.append([row, col])
 
 if __name__ == '__main__':
     pass
