@@ -76,7 +76,7 @@ class Board:
         board = self.checkBoard(player)[0]
 
         placementValid = True
-        if col + length <= self.lastIndex:
+        if col + length - 1 <= self.lastIndex:
             for colInd in range(col, col + length):
                 if board[row][colInd] != 0:
                     placementValid = False
@@ -90,7 +90,7 @@ class Board:
 
     def checkBoard(self, player):
 
-        if player == '1':
+        if player == 0:
             board = self.firstPlayer
             shipDict = self.firstPlayerDict
             chosenCells = self.firstPlayerList
@@ -241,7 +241,7 @@ class Board:
             if rotate == 1:
                 self.rotateShip(ship, player)
 
-        return listShip
+
 
     def checkHit(self, row, col, player):
 
@@ -318,5 +318,45 @@ class Board:
         listChosenCells = self.checkBoard(player)[2]
         listChosenCells.append([row, col])
 
+    def checkAllPiecesPlaced(self, player):
+        board = self.checkBoard(player)[0]
+        countCarrier = 0
+        countBattleship = 0
+        countCruiser = 0
+        countSubmarine = 0
+        countDestroyer = 0
+
+        for row in board:
+            countCarrier += row.count(1)
+            countBattleship += row.count(2)
+            countCruiser += row.count(3)
+            countSubmarine += row.count(4)
+            countDestroyer += row.count(5)
+
+        if countCarrier == 5 and countBattleship == 4 and countCruiser == 3 and countSubmarine == 3 and countDestroyer == 2:
+            boardFilled = True
+        else:
+            boardFilled = False
+
+        return boardFilled
+
+    def checkDuplicateAttack(self, row, col, player):
+        board = self.checkBoard(player)[0]
+        if board[row][col] == '.' or board[row][col] == 'X':
+            alreadyHit = True
+        else:
+            alreadyHit = False
+
+        return alreadyHit
+
+
+
 if __name__ == '__main__':
     pass
+
+
+    # board = Board.instance()
+    # board.initialise()
+    # list = board.randomiseBoard(0)
+    # print(list)
+    # board.printBoard(0)
