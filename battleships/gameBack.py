@@ -76,7 +76,7 @@ class Board:
         board = self.checkBoard(player)[0]
 
         placementValid = True
-        if col + length <= self.lastIndex:
+        if col + length - 1 <= self.lastIndex:
             for colInd in range(col, col + length):
                 if board[row][colInd] != 0:
                     placementValid = False

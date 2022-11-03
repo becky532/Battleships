@@ -2,15 +2,13 @@ from gameBack import Board
 
 
 def playerSetup(player):
+    if player == '1':
+        print('Player 1 Setup')
+    else:
+        print('Player 2 Setup')
 
-    print("Player1 Setup")
     board = Board.instance()
     board.initialise()
-    # if player == '1':
-    #     listPlayerPieces = list(board.firstPlayerDict.keys())
-    # else:
-    #     listPlayerPieces = list(board.secondPlayerDict.keys())
-    # board.printBoard(player)
 
     listPlayerPieces = ['Carrier', 'Battleship', 'Cruiser', 'Submarine', 'Destroyer']
 
