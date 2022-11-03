@@ -10,7 +10,7 @@ class Game:
         if self.currentPlayer == self.firstPlayer:
             self.currentPlayer = self.secondPlayer
         else:
-            self.currentPlayer = self.secondPlayer
+            self.currentPlayer = self.firstPlayer
 
     def fire(self, row, col):
         hit = None
@@ -23,7 +23,7 @@ class Game:
 
                 hit, shipHit = self.secondPlayer.checkHit(row, col)
                 shipSunk = self.secondPlayer.checkSunk(shipHit)
-                gameOver = self.firstPlayer.checkDefeated()
+                gameOver = self.secondPlayer.checkDefeated()
 
             else:
                 hit, shipHit = self.firstPlayer.checkHit(row, col)

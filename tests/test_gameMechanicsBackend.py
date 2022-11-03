@@ -16,6 +16,7 @@ class TestGame(TestCase):
                            [0, 'X', 'X', 'X', 'X', 'X', 0],
                            [0, 0, 0, 'X', 5, 0, 0]]
         game = Game(firstPlayer, secondPlayer)
+        game.currentPlayer = firstPlayer
         validHit, hit, shipHit, shipSunk = game.fire(6, 4)
         gameOver = game.checkGameOver()
 

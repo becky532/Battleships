@@ -9,6 +9,8 @@ secondPlayerBoard.randomiseBoard()
 battleships = Game(firstPlayerBoard, secondPlayerBoard)
 gameOver = False
 
+
+
 while gameOver == False:
 
     if battleships.currentPlayer == battleships.firstPlayer:
@@ -21,19 +23,28 @@ while gameOver == False:
     if prompt == 'Yes':
         validHit = False
         while validHit == False:
-            row = input("What row would you like to attack? ")
-            col = input("What column would you like to attack? ")
-            validHit, hit, shipHit, shipSunk = battleships.fire(int(row), int(col))
+            try:
+                row = input("What row would you like to attack? ")
+                col = input("What column would you like to attack? ")
+                row = int(row)
+                col = int(col)
+            except ValueError:
+                print("Invalid input!")
+                continue
+
+            validHit, hit, shipHit, shipSunk = battleships.fire(row, col)
             if validHit == True:
                 if hit == True:
                     if shipSunk == True:
                         print(f"You have sunk your opponent's {shipHit}")
+                        gameOver = battleships.checkGameOver()
+
                     else:
-                        print(f"You hit your oppenent's {shipHit}")
+                        print(f"You hit your opponent's {shipHit}")
                 else:
                     print("You missed")
-                gameOver = battleships.checkGameOver()
             else:
                 print("Invalid cell. Try again")
+        print(battleships.currentPlayer)
 
-    print(f"Game is over. {currentPlayer} has won the game!")
+print(f"Game is over. {currentPlayer} has won the game!")
