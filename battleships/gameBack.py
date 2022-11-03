@@ -4,7 +4,7 @@ import random
 class Board:
 
     def __init__(self):
-        self.board = []
+
         self.emptyBoard = [[0, 0, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0],
@@ -26,7 +26,13 @@ class Board:
 
     def newBoard(self):
 
-        self.board = self.emptyBoard
+        self.board = [[0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0]]
 
     def printBoard(self):
 
@@ -42,13 +48,14 @@ class Board:
 
         for i in range(7):
             print(str(i) + ' ', end='')
+        print()
 
     def validateInitialPlacement(self, length, row, col):
 
         placementValid = True
         if col + length <= self.lastIndex:
             for colInd in range(col, col + length):
-                if self.board[row][colInd] == 1:
+                if self.board[row][colInd] != 0:
                     placementValid = False
                     break
         else:
@@ -158,7 +165,6 @@ class Board:
     def randomiseBoard(self):
         if self.board != self.emptyBoard:
             self.clearBoard()
-            self.newBoard()
 
         listShip = list(self.shipsDict.keys())
         random.shuffle(listShip)
@@ -175,30 +181,31 @@ class Board:
         return listShip
 
     def checkHit(self, row, col):
-        value = self.board[row][col]
-        hit = True
-        if value == 0:
-            hit = False
-            shipHit = None
-            self.board[row][col] = '.'
-        elif value == 1:
-            shipHit = 'Carrier'
-            self.knockOutCell(shipHit, row, col)
-        elif value == 2:
-            shipHit = 'Battleship'
-            self.knockOutCell(shipHit, row, col)
+        if row <= self.lastIndex and col<=self.lastIndex:
+            value = self.board[row][col]
+            hit = True
+            if value == 0:
+                hit = False
+                shipHit = None
+                self.board[row][col] = '.'
+            elif value == 1:
+                shipHit = 'Carrier'
+                self.knockOutCell(shipHit, row, col)
+            elif value == 2:
+                shipHit = 'Battleship'
+                self.knockOutCell(shipHit, row, col)
 
-        elif value == 3:
-            shipHit = 'Cruiser'
-            self.knockOutCell(shipHit, row, col)
-        elif value == 4:
-            shipHit = 'Submarine'
-            self.knockOutCell(shipHit, row, col)
-        else:
-            shipHit = 'Destroyer'
-            self.knockOutCell(shipHit, row, col)
+            elif value == 3:
+                shipHit = 'Cruiser'
+                self.knockOutCell(shipHit, row, col)
+            elif value == 4:
+                shipHit = 'Submarine'
+                self.knockOutCell(shipHit, row, col)
+            else:
+                shipHit = 'Destroyer'
+                self.knockOutCell(shipHit, row, col)
 
-        return hit, shipHit
+            return hit, shipHit
 
     def knockOutCell(self, ship, row, col):
         cell = self.shipsDict[ship]['position'].index([row, col])
@@ -217,10 +224,18 @@ class Board:
 
         return shipSunk
 
+    def checkDefeated(self):
+        listCells = []
+        for i in range(7):
+            for j in range(7):
+                listCells.append(self.board[i][j])
+        allShipsDestroyed = listCells.count('X')
+        if allShipsDestroyed == 17:
+            gameOver = True
+        else:
+            gameOver = False
 
-
-
+        return gameOver
 
 if __name__ == '__main__':
     pass
-

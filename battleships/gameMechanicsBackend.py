@@ -1,14 +1,4 @@
-from gameBack import Board
-from enum import Enum, auto
-
-# class Player(Enum):
-#
-#     firstPlayer = auto()
-#     secondPlayer = auto()
-#
-#     def opponent(self):
-#         if self == Player.firstPlayer: return Player.secondPlayer
-#         else: return Player.firstPlayer
+from battleships.gameBack import Board
 
 class Game:
     def __init__(self, board1: Board, board2: Board):
@@ -20,41 +10,44 @@ class Game:
         if self.currentPlayer == self.firstPlayer:
             self.currentPlayer = self.secondPlayer
         else:
-            self.currentPlayer = self.secondPlayer
+            self.currentPlayer = self.firstPlayer
 
     def fire(self, row, col):
+        hit = None
+        shipHit = None
+        shipSunk = None
 
-        if self.currentPlayer == self.firstPlayer:
-            #if cell not alread chosen then try otherwise return already used
-            hit, shipHit = self.secondPlayer.checkHit(row, col)
-            shipSunk = self.secondPlayer.checkSunk(shipHit)
-            #if ship now destroyed then return shipSunk
+        if row <= 6 and col <= 6:
+            validHit = True
+            if self.currentPlayer == self.firstPlayer:
+
+                hit, shipHit = self.secondPlayer.checkHit(row, col)
+                shipSunk = self.secondPlayer.checkSunk(shipHit)
+                gameOver = self.secondPlayer.checkDefeated()
+
+            else:
+                hit, shipHit = self.firstPlayer.checkHit(row, col)
+                shipSunk = self.firstPlayer.checkSunk(shipHit)
+                gameOver = self.firstPlayer.checkDefeated()
+
+            if gameOver == False:
+                self.switchPlayer()
         else:
-            hit, shipHit = self.firstPlayer.checkHit(row, col)
-            shipSunk = self.firstPlayer.checkSunk(shipHit)
+            validHit = False
 
-        return hit, shipHit, shipSunk
+        return validHit, hit, shipHit, shipSunk
+    def showPlayerBoard(self):
+        if self.currentPlayer == self.firstPlayer:
+            self.firstPlayer.printBoard()
+        else:
+            self.secondPlayer.printBoard()
+    def checkGameOver(self):
+        if self.currentPlayer == self.firstPlayer:
+            gameOver = self.secondPlayer.checkDefeated()
+        else:
+            gameOver = self.firstPlayer.checkDefeated()
 
+        return gameOver
 
 if __name__ == '__main__':
-    firstBoard = Board()
-    secondBoard = Board()
-    secondBoard.placeShip(0, 0, 'Carrier')
-    secondBoard.placeShip(1, 0, 'Destroyer')
-    secondBoard.placeShip(2, 0, 'Submarine')
-    secondBoard.placeShip(3, 0, 'Battleship')
-    secondBoard.placeShip(4, 0, 'Cruiser')
-
-    game = Game(firstBoard, secondBoard)
-    game.secondPlayer.printBoard()
-
-    noHit, ship, sunk = game.fire(1, 0)
-    noHit, ship, sunk = game.fire(1, 1)
-    print(noHit)
-    print(ship)
-    print(sunk)
-    game.secondPlayer.printBoard()
-
-
-
-
+    pass
