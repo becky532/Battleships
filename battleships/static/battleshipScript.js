@@ -48,19 +48,13 @@ dropzone.addEventListener("dragover", (event)=> {
     let yCoord = Math.round((event.offsetY-boatSelected.pickPoint[1])/gridSquareSize);
     console.log("Ycoord = " + yCoord);
     boatSelected.gridCoord = [xCoord, yCoord];
+    boatSelected.position = [xCoord * gridSquareSize, yCoord * gridSquareSize]
     event.preventDefault(); //allows object to drop
 });
 
 dropzone.addEventListener("drop", (event)=> {
     console.log("DROPPED");
-    isValid = dropValid();
-    console.log(isValid);
-    if (isValid){
-        console.log("is valid");
-    }
-    else{
-        console.log("is not valid");
-    }
+    dropValid()
 });
 
 //async function dropValid(){
@@ -69,9 +63,26 @@ dropzone.addEventListener("drop", (event)=> {
 //    return isValid;
 //}
 
-async function dropValid(){
-    boat = [boatSelected.gridCoord, boatSelected.shipName]
-    socket.emit('shipCheck', boat)
-    isValid = true
-    return isValid;
+function dropValid(){
+    boat = [boatSelected.gridCoord, boatSelected.shipName];
+    socket.emit('shipCheck', boat);
 }
+
+function placeShip(){
+    dropzone.appendChild(boatSelected.html)
+    boatSelected.html.style.transform = `translate(${boatSelected.position[0]}px,${boatSelected.position[1]}px)`
+    boatSelected.html.style.position = "absolute"
+}
+
+$('#all-ready').on('click', function() {
+    socket.emit('readyCheck')
+})
+
+enemyZone.addEventListener("click", (event) => {
+    if (player1Ready && player2Ready) {
+        let xCoord = Math.round(event.offsetX/gridSquareSize);
+        console.log("Xcoord = " + xCoord);
+        let yCoord = Math.round(event.offsetY/gridSquareSize);
+        console.log("Ycoord = " + yCoord);
+    }
+});

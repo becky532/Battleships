@@ -5,7 +5,8 @@ from gameBack import Board
 server = Flask(__name__)
 server.config['SECRET_KEY'] = 'TeamTitanic'
 socketio = SocketIO(server, cors_allowed_origins='*')
-users = [None, None]
+
+
 @socketio.on('message')
 def handleMessage(msg):
     print(msg)
@@ -40,11 +41,36 @@ def disconnect():
 def validMoveCheck(boat):
     sid = request.sid
     print(boat)
+    row = boat[0][1]
+    col = boat[0][1]
     print(sid)
     validPlacement = True
     socketio.emit('shipCheck', validPlacement, to=sid)
 
 
+@socketio.on('readyCheck')
+def readyCheck():
+    if None not in users:       # checks that there are two users connected
+        # board = Board.instance()
+        sid = request.sid
+        playerId = users.index(sid)
+        if playerId == 0:
+            otherId = 1
+        else:
+            otherId = 0
+        # backend ready is true
+        ready = True
+        if ready:
+            socketio.emit('personalReady', playerId, to=users[playerId])
+            socketio.emit('enemyReady', playerId, to=users[otherId])
+
+@SocketIO.on('attack')
+def attack(coord):
+
+
 if __name__ == "__main__":
+    users = [None, None]
+    # board = Board.instance()
+    # board.initialise()
     socketio.run(server, port=5555)
 
