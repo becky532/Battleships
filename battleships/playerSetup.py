@@ -2,7 +2,7 @@ from gameBack import Board
 
 
 def playerSetup(player):
-    if player == '1':
+    if player == 0:
         print('Player 1 Setup')
     else:
         print('Player 2 Setup')

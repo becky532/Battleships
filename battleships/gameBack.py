@@ -90,11 +90,11 @@ class Board:
 
     def checkBoard(self, player):
 
-        if player == '1':
+        if player == 0:
             board = self.firstPlayer
             shipDict = self.firstPlayerDict
             chosenCells = self.firstPlayerList
-        else:
+        elif player == 1:
             board = self.secondPlayer
             shipDict = self.secondPlayerDict
             chosenCells = self.secondPlayerList
@@ -317,6 +317,28 @@ class Board:
     def listAttacks(self, row, col, player):
         listChosenCells = self.checkBoard(player)[2]
         listChosenCells.append([row, col])
+
+    def checkAllPiecesPlaced(self, player):
+        board = self.checkBoard(player)[0]
+        countCarrier = 0
+        countBattleship = 0
+        countCruiser = 0
+        countSubmarine = 0
+        countDestroyer = 0
+
+        for row in board:
+            countCarrier += row.count(1)
+            countBattleship += row.count(2)
+            countCruiser += row.count(3)
+            countSubmarine += row.count(4)
+            countDestroyer += row.count(5)
+
+        if countCarrier == 5 and countBattleship == 4 and countCruiser == 3 and countSubmarine == 3 and countDestroyer == 2:
+            boardFilled = True
+        else:
+            boardFilled = False
+
+        return boardFilled
 
 if __name__ == '__main__':
     pass

@@ -38,8 +38,8 @@ def menu():
 
 def game():
 
-    firstPlayerBoard = playerSetup('1')
-    secondPlayerBoard = playerSetup('2')
+    firstPlayerBoard = playerSetup(0)
+    secondPlayerBoard = playerSetup(1)
 
     battleships = Game(firstPlayerBoard, secondPlayerBoard)
     gameOver = False
