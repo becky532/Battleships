@@ -25,6 +25,7 @@ def playerSetup(player):
 
             row = int(whichRow)
             col = int(whichCol)
+
             shipType = str(whichShip)
 
             if shipType not in listPlayerPieces:
@@ -33,6 +34,7 @@ def playerSetup(player):
                 validInput = True
 
         validPosition = board.placeShip(row, col, shipType, player)
+
         if validPosition == False:
             print("Cannot place ship here")
             continue
@@ -43,47 +45,5 @@ def playerSetup(player):
     return board
 
 
-# def secondPlayerSetup():
-#
-#     print("Player2 Setup")
-#
-#     secondPlayerBoard = Board()
-#     secondPlayerBoard.newBoard()
-#     listSecondPlayerPieces = list(secondPlayerBoard.shipsDict.keys())
-#     secondPlayerBoard.printBoard()
-#
-#
-#     while len(listSecondPlayerPieces) > 0:
-#
-#         validInput = False
-#
-#         print("")
-#         whichRow = input("Choose a row for your ship: ")
-#         whichCol = input("Choose a column for your ship: ")
-#         print(listSecondPlayerPieces)
-#         while validInput == False:
-#             whichShip = input("Choose the ship type: ")
-#
-#
-#             row = int(whichRow)
-#             col = int(whichCol)
-#             shipType = str(whichShip)
-#
-#             if shipType not in listSecondPlayerPieces:
-#                 print("try again")
-#             else:
-#                 validInput = True
-#
-#
-#
-#         validPosition = secondPlayerBoard.placeShip(row, col, shipType)
-#         if validPosition == False:
-#             print("Cannot place ship here")
-#             continue
-#         else:
-#             secondPlayerBoard.printBoard()
-#             listSecondPlayerPieces.remove(whichShip)
-#
-#     return secondPlayerBoard
 
 
