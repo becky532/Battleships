@@ -41,7 +41,8 @@ def validMoveCheck(boat):
     sid = request.sid
     print(boat)
     print(sid)
-    socketio.emit('shipCheck', to=sid)
+    validPlacement = True
+    socketio.emit('shipCheck', validPlacement, to=sid)
 
 
 if __name__ == "__main__":
