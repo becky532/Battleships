@@ -27,9 +27,9 @@ def menu():
 
 
         Are you ready to fight?
-        ''')
+        ''').title()
 
-    if option == 'yes':
+    if option == 'Yes':
         game()
     else:
         print("What a loser.")
@@ -38,22 +38,28 @@ def menu():
 
 def game():
 
-    firstPlayerBoard = playerSetup(0)
-    secondPlayerBoard = playerSetup(1)
+    board = Board.instance()
+    board.initialise()
 
-    battleships = Game(firstPlayerBoard, secondPlayerBoard)
+    board.firstPlayer = playerSetup(0)
+    board.secondPlayer = playerSetup(1)
+
+    battleships = Game(board)
     gameOver = False
 
     while gameOver == False:
 
-        if battleships.currentPlayer == battleships.firstPlayer:
+        if battleships.currentPlayer == 1:
             currentPlayer = 'Player 1'
+            playerID = 0
         else:
             currentPlayer = 'Player 2'
+            playerID = 1
 
         prompt = input(f"Ready {currentPlayer}? ").title()
-        battleships.showPlayerBoard()
+
         if prompt == 'Yes':
+            battleships.showPlayerBoard()
             validHit = False
             while validHit == False:
                 try:
@@ -65,8 +71,9 @@ def game():
                     print("Invalid input!")
                     continue
                 else:
-                    if [row, col] in battleships.currentPlayer.listChosenCells:
-                        print("Have already chosen to attack this cell")
+                    duplicateHit = board.checkDuplicateAttack(row, col, playerID)
+                    if duplicateHit == True:
+                        print("Already hit this cell, try again!")
                         continue
 
                 validHit, hit, shipHit, shipSunk = battleships.fire(row, col)
@@ -82,7 +89,7 @@ def game():
                         print("You missed")
                 else:
                     print("Invalid cell. Try again")
-            print(battleships.currentPlayer)
+
 
     print(f"Game is over. {currentPlayer} has won the game!")
 

@@ -94,7 +94,7 @@ class Board:
             board = self.firstPlayer
             shipDict = self.firstPlayerDict
             chosenCells = self.firstPlayerList
-        elif player == 1:
+        else:
             board = self.secondPlayer
             shipDict = self.secondPlayerDict
             chosenCells = self.secondPlayerList
@@ -241,7 +241,7 @@ class Board:
             if rotate == 1:
                 self.rotateShip(ship, player)
 
-        return listShip
+
 
     def checkHit(self, row, col, player):
 
@@ -340,5 +340,23 @@ class Board:
 
         return boardFilled
 
+    def checkDuplicateAttack(self, row, col, player):
+        board = self.checkBoard(player)[0]
+        if board[row][col] == '.' or board[row][col] == 'X':
+            alreadyHit = True
+        else:
+            alreadyHit = False
+
+        return alreadyHit
+
+
+
 if __name__ == '__main__':
     pass
+
+
+    # board = Board.instance()
+    # board.initialise()
+    # list = board.randomiseBoard(0)
+    # print(list)
+    # board.printBoard(0)
