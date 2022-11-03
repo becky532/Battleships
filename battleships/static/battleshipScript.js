@@ -63,8 +63,15 @@ dropzone.addEventListener("drop", (event)=> {
     }
 });
 
+//async function dropValid(){
+//    const response = await fetch("/validDrop/" + boatSelected.gridCoord);
+//    let isValid = await response.json();
+//    return isValid;
+//}
+
 async function dropValid(){
-    const response = await fetch("/validDrop/" + boatSelected.gridCoord);
-    let isValid = await response.json();
+    boat = [boatSelected.gridCoord, boatSelected.shipName]
+    socket.emit('shipCheck', boat)
+    isValid = true
     return isValid;
 }
