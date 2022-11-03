@@ -1,7 +1,6 @@
 from gameBack import Board
 from gameMechanicsBackend import Game
-from playerSetup import firstPlayerSetup
-from playerSetup import secondPlayerSetup
+from playerSetup import playerSetup
 
 def menu():
     print("Hello!")
@@ -45,8 +44,6 @@ def game():
 
     battleships = Game(firstPlayerBoard, secondPlayerBoard)
     gameOver = False
-
-
 
     while gameOver == False:
 
