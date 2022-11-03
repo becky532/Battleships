@@ -31,3 +31,11 @@ socket.on('enemyReady', (playerNum) => {
         player2Ready = true;
     }
 });
+
+socket.on('attackResult', (attackResult, coord) => {
+    showAttackResult(attackResult, coord);
+});
+
+socket.on('defenceResult', (attackResult, coord) => {
+    showEnemyAttack(attackResult, coord);
+});

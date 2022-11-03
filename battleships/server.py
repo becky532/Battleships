@@ -64,8 +64,23 @@ def readyCheck():
             socketio.emit('personalReady', playerId, to=users[playerId])
             socketio.emit('enemyReady', playerId, to=users[otherId])
 
-@SocketIO.on('attack')
+@socketio.on('attack')
 def attack(coord):
+    sid = request.sid
+    playerId = users.index(sid)
+    # turnToAttack(playerId)
+    # validCoord(playerId, coord)
+    turnToAttack = True
+    validCoord = True
+    if turnToAttack and validCoord:
+        if playerId == 0:
+            otherId = 1
+        else:
+            otherId = 0
+        # attack player board and return result
+        attackResult = False
+        socketio.emit('attackResult', (attackResult, coord), to=users[playerId])
+        socketio.emit('defenceResult', (attackResult, coord), to=users[otherId])
 
 
 if __name__ == "__main__":

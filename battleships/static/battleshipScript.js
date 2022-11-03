@@ -7,6 +7,16 @@ let boatSelected = {};
 boatSelected.orientation = "horizontal";
 let player1Ready = false;
 let player2Ready = false;
+enemyZone.addEventListener('mouseover',()=> {
+    cursor.removeAttribute("style","opacity: 0");
+})
+enemyZone.addEventListener('mouseleave', ()=> {
+    cursor.setAttribute("style","opacity: 0");
+})
+
+enemyZone.addEventListener('mousemove', event => {
+  cursor.setAttribute("style", "top: "+(event.pageY - 10)+"px; left: "+(event.pageX - 10)+"px;")
+})
 
 
 let boatArray = Array.from(document.getElementsByClassName("boat"));
@@ -84,5 +94,59 @@ enemyZone.addEventListener("click", (event) => {
         console.log("Xcoord = " + xCoord);
         let yCoord = Math.round(event.offsetY/gridSquareSize);
         console.log("Ycoord = " + yCoord);
+        let coord = [xCoord, yCoord]
+        socket.emit('attack', coord)
     }
 });
+
+function showAttackResult(attackResult, coord){
+    player = document.getElementById('enemyZone');
+    console.log('showAttackResult');
+    console.log(coord);
+    console.log(player);
+    if (attackResult) {
+        decorateHit(coord, player);
+    }
+    else {
+        decorateMiss(coord, player);
+    }
+}
+
+function showEnemyAttack(attackResult, coord){
+    player = document.getElementById('dropzone');
+    console.log('showEnemyAttack');
+    console.log(coord);
+    console.log(player);
+    if (attackResult) {
+        decorateHit(coord, player);
+    }
+    else {
+        decorateMiss(coord, player);
+    }
+}
+
+function decorateHit(coord, player){
+  player.innerHTML += `
+  <div class="fire" style="transform: translate(${(coord[0]*57)+11.4}px, ${(coord[1]*57)-40}px)">
+  <div class="hole3"></div>
+  <div class="hole2"></div>
+  <div class="hole1"></div>
+  <div class="flame1"></div>
+  <div class="flame2"></div>
+  <div class="flame3"></div>
+  <div class="flame4"></div>
+  <div class="flame5"></div>
+</div>`
+}
+
+function decorateMiss(coord){
+  player.innerHTML += `
+  <div class="w" style="transform: translate(${coord[0]*57}px, ${coord[1]*57}px)">
+  <div class="water1"></div>
+  <div class="water2"></div>
+  <div class="water3"></div>
+  <div class="water4"></div>
+  <div class="water5"></div>
+  </div>
+  `
+}
