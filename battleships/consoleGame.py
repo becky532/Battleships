@@ -1,6 +1,9 @@
 from gameBack import Board
 from gameMechanicsBackend import Game
 from playerSetup import playerSetup
+import logging
+
+logging.basicConfig(filename='battleships.log', level=logging.INFO, filemode='w', force=True)
 
 def menu():
     print("Hello!")
@@ -30,6 +33,7 @@ def menu():
         ''').title()
 
     if option == 'Yes':
+        logging.info("Game started")
         game()
     else:
         print("What a loser.")
@@ -52,11 +56,14 @@ def game():
         if battleships.currentPlayer == 1:
             currentPlayer = 'Player 1'
             playerID = 0
+            opponent = 'Player 2'
         else:
             currentPlayer = 'Player 2'
+            opponent = 'Player 1'
             playerID = 1
 
         prompt = input(f"Ready {currentPlayer}? ").title()
+        logging.info(f"Current player: {currentPlayer}")
 
         if prompt == 'Yes':
             battleships.showPlayerBoard()
@@ -69,11 +76,16 @@ def game():
                     col = int(col)
                 except ValueError:
                     print("Invalid input!")
+                    logging.info(f"{currentPlayer} has made an invalid cell choice")
                     continue
                 else:
                     duplicateHit = board.checkDuplicateAttack(row, col, playerID)
                     if duplicateHit == True:
                         print("Already hit this cell, try again!")
+                        logging.info(f"{currentPlayer} has chosen cell [{row}, {col}] again.")
+                        continue
+                    elif duplicateHit is None:
+                        logging.info(f"{currentPlayer} has chosen a cell outside of grid")
                         continue
 
                 validHit, hit, shipHit, shipSunk = battleships.fire(row, col)
@@ -81,15 +93,17 @@ def game():
                     if hit == True:
                         if shipSunk == True:
                             print(f"You have sunk your opponent's {shipHit}")
+                            logging.info(f"{currentPlayer} has sunk {opponent}'s {shipHit}")
                             gameOver = battleships.checkGameOver()
 
                         else:
                             print(f"You hit your opponent's {shipHit}")
+                            logging.info(f"{currentPlayer} has hit {opponent}'s {shipHit} at [{row},{col}]")
                     else:
                         print("You missed")
+                        logging.info(f"{currentPlayer} failed to hit {opponent} at [{row}, {col}]")
                 else:
                     print("Invalid cell. Try again")
-
 
     print(f"Game is over. {currentPlayer} has won the game!")
 

@@ -82,7 +82,6 @@ class Board:
                     placementValid = False
                     break
         else:
-            logging.info("Ship too long to place here")
             placementValid = False
 
         return placementValid
@@ -110,7 +109,7 @@ class Board:
             placementValid = self.validateInitialPlacement(shipLength, row, col, player)
 
             if placementValid == True:
-                logging.info(f'Valid placement of {shipType}')
+
                 shipLength = shipDict[shipType]["length"]
 
                 for cellCol in range(col, col + shipLength):
@@ -118,11 +117,9 @@ class Board:
 
                 self.place(shipType, player)
                 shipDict[shipType]['orientation'] = 'horizontal'
-            else:
-                logging.info(f'Invalid placement of {shipType}')
 
         else:
-            logging.info("Invalid square chosen")
+
             placementValid = False
 
         return placementValid
@@ -184,7 +181,7 @@ class Board:
             self.__rotate(shipType, checkCells, player)
             shipDict[shipType]['orientation'] = 'horizontal'
         else:
-            logging.info(f"Ship {shipType} could not be rotated")
+
             rotationValid = False
 
         return rotationValid
@@ -219,7 +216,6 @@ class Board:
         shipDict[shipType]['position'] = newPosition
         self.place(shipType, player)
         shipDict[shipType]['orientation'] = 'vertical'
-        logging.info(f"Piece {shipType} has been rotated")
 
     def randomiseBoard(self, player):
 
@@ -240,8 +236,6 @@ class Board:
             rotate = random.randint(0, 1)
             if rotate == 1:
                 self.rotateShip(ship, player)
-
-
 
     def checkHit(self, row, col, player):
 
@@ -314,9 +308,9 @@ class Board:
 
         return gameOver
 
-    def listAttacks(self, row, col, player):
-        listChosenCells = self.checkBoard(player)[2]
-        listChosenCells.append([row, col])
+    # def listAttacks(self, row, col, player):
+    #     listChosenCells = self.checkBoard(player)[2]
+    #     listChosenCells.append([row, col])
 
     def checkAllPiecesPlaced(self, player):
         board = self.checkBoard(player)[0]
@@ -341,11 +335,18 @@ class Board:
         return boardFilled
 
     def checkDuplicateAttack(self, row, col, player):
-        board = self.checkBoard(player)[0]
-        if board[row][col] == '.' or board[row][col] == 'X':
-            alreadyHit = True
+        if player == 0:
+            boardToCheck = self.secondPlayer
         else:
-            alreadyHit = False
+            boardToCheck = self.firstPlayer
+
+        if row <= self.lastIndex and col <= self.lastIndex:
+            if boardToCheck[row][col] == '.' or boardToCheck[row][col] == 'X':
+                alreadyHit = True
+            else:
+                alreadyHit = False
+        else:
+            alreadyHit = None
 
         return alreadyHit
 
@@ -353,10 +354,3 @@ class Board:
 
 if __name__ == '__main__':
     pass
-
-
-    # board = Board.instance()
-    # board.initialise()
-    # list = board.randomiseBoard(0)
-    # print(list)
-    # board.printBoard(0)
