@@ -1,8 +1,10 @@
 import random
 import logging
 from gameMechanicsBackend import Game
+from gameBack import Board
 
 class AI:
+
     _instance = None
     def __init__(self):
         raise RuntimeError('Call instance() instead')
@@ -13,15 +15,100 @@ class AI:
             logging.basicConfig(filename='battleships.log', level=logging.INFO, filemode='w', force=True)
             logging.info('Creating new instance')
             cls._instance = cls.__new__(cls)
-            cls._instance.initialise()
+            cls._instance.initialise(g, b)
         return cls._instance
 
-    def initialise(self, game: Game):
-        self.targets = []
+    def initialise(self, game: Game, board: Board):
+        self.targets = {'Carrier': [[2, 2], [2, 3]],
+                        'Battleship': [],
+                        'Cruiser': [],
+                        'Submarine': [],
+                        'Destroyer': []
+        }
+        self.destroyed = {'Carrier': False,
+                          'Battleship': False,
+                          'Cruiser': False,
+                          'Submarine': False,
+                          'Destroyer': False
+                          }
+        self.board = board
+        self.game = game
+        self.playerId = 1
 
     def AIRandomAttack(self):
         guessRow = random.randint(0, 6)
         guessCol = random.randint(0, 6)
-        if [guessRow, guessCol] in self.targets
+        print([guessRow, guessCol])
+        alreadyHit = True
+        while alreadyHit == True:
+            alreadyHit = self.board.checkDuplicateAttack(guessRow, guessCol, self.playerId)  ##AI always player 2
+            attack = self.game.fire(guessRow, guessCol, self.playerId)
+            hitSuccessful = attack[1]
+            shipSunk = attack[3]
+            shipHit = attack[2]
+            if hitSuccessful == True:
+                self.targets[shipHit].append([guessRow, guessCol])
 
-    def AISmartAttack(self):
+            if shipSunk == True:
+                self.destroyed[shipHit] = True
+
+    def AISmartAttackMoves(self):
+        listShips = ['Carrier', 'Battleship', 'Cruiser', 'Submarine', 'Destroyer']
+        for ship in listShips:
+            if self.destroyed[ship] == True:
+                listShips.remove(ship)
+        cellsHit = {}
+        for ship in listShips:
+            cellsHit[ship] = len(self.targets[ship])
+
+        shipToAttack = max(cellsHit, key=cellsHit.get)
+        possibleMoves = []
+
+        if len(self.targets[shipToAttack]) == 1:
+            hitCells = self.targets[shipToAttack]
+            hitRow = hitCells[0][0]
+            hitCol = hitCells[0][1]  ###what if 0 or 6
+            possibleMoves.extend([[hitRow, hitCol + 1], [hitRow + 1, hitCol]])
+
+        elif len(self.targets[shipToAttack]) > 1:
+            hitCells = self.targets[shipToAttack]
+            hitRows = []
+            hitCols = []
+
+            for cell in hitCells:
+                hitRows.append(cell[0])
+                hitCols.append(cell[1])
+
+            if len(hitCols) == len(set(hitCols)):
+                orientation = 'horizontal'
+            else:
+                orientation = 'vertical'
+
+            if orientation == 'horizontal':
+                minCol = min(hitCols)
+                maxCol = max(hitCols)
+                row = hitCells[0][1]
+
+                if minCol != 0:
+                    possibleMoves.append([row, minCol - 1])
+                if maxCol != 5:
+                    possibleMoves.append([row, maxCol + 1])
+
+        else:
+            possibleMoves = None
+
+        return possibleMoves
+
+if __name__ == '__main__':
+    b = Board.instance()
+    b.initialise()
+    g = Game(b)
+    a = AI.instance()
+    a.initialise(g, b)
+
+    b.randomiseBoard(0)
+    b.randomiseBoard(1)
+    g.fire(0, 0, 0)
+    l = a.AISmartAttack()
+    print(l)
+
