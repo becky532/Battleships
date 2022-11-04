@@ -60,18 +60,21 @@ def attack(coord):
     game = Game(board)
     sid = request.sid
     playerId = users.index(sid)
-    # turnToAttack(playerId)
-    # validCoord(playerId, coord)
-    turnToAttack = True
-    validCoord = True
-    if turnToAttack and validCoord:
-        otherId = getOtherId(playerId)
-        # attack player board and return result
-        attackResult = False
-        socketio.emit('attackResult', (attackResult, coord), to=users[playerId])
-        socketio.emit('defenceResult', (attackResult, coord), to=users[otherId])
+    row = 6 - coord[0][1]
+    col = coord[0][0]
+    alreadyHit = board.checkDuplicateAttack(row, col, playerId)
+    if not alreadyHit:
+        attackData = game.fire(row, col, playerId)
+        if attackData is not None:
+            validCoord = attack[0]
+            attackResult = attack[1]
+            if validCoord:
+                otherId = getOtherId(playerId)
+                # attack player board and return result
+                socketio.emit('attackResult', (attackResult, coord), to=users[playerId])
+                socketio.emit('defenceResult', (attackResult, coord), to=users[otherId])
 
-        #if statement checking game over, if true broadcast victory page?
+            #if statement checking game over, if true broadcast victory page?
 
 
 @socketio.on('removeBoatIfOnBoard')
