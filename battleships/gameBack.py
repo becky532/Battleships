@@ -238,12 +238,21 @@ class Board:
             if rotate == 1:
                 self.rotateShip(ship, player)
 
-    def checkHit(self, row, col, player):
-
+    def checkOpponentBoard(self, player):
         if player == 0:
             board = self.secondPlayer
+            shipDict = self.secondPlayerDict
+            chosenCells = self.secondPlayerList
         else:
             board = self.firstPlayer
+            shipDict = self.firstPlayerDict
+            chosenCells = self.firstPlayerList
+
+        return [board, shipDict, chosenCells]
+
+    def checkHit(self, row, col, player):
+
+        board = self.checkOpponentBoard(player)[0]
 
         if row <= self.lastIndex and col <= self.lastIndex:
             value = board[row][col]
@@ -274,12 +283,8 @@ class Board:
 
     def knockOutCell(self, ship, row, col, player):
 
-        if player == 0:
-            board = self.secondPlayer
-            shipDict = self.secondPlayerDict
-        else:
-            board = self.firstPlayer
-            shipDict = self.firstPlayerDict
+        board = self.checkOpponentBoard(player)[0]
+        shipDict = self.checkOpponentBoard(player)[1]
 
         cell = shipDict[ship]['position'].index([row, col])
         shipDict[ship]['position'][cell] = 'X'
@@ -287,10 +292,7 @@ class Board:
 
     def checkSunk(self, shipType, player):
 
-        if player == 0:
-            shipDict = self.secondPlayerDict
-        else:
-            shipDict = self.firstPlayerDict
+        shipDict = self.checkOpponentBoard(player)[1]
 
         shipSunk = False
         if shipType is not None:
@@ -305,10 +307,7 @@ class Board:
 
     def checkDefeated(self, player):
 
-        if player == 0:
-            board = self.secondPlayer
-        else:
-            board = self.firstPlayer
+        board = self.checkOpponentBoard(player)[0]
 
         listCells = []
         for i in range(7):
@@ -345,13 +344,11 @@ class Board:
         return boardFilled
 
     def checkDuplicateAttack(self, row, col, player):
-        if player == 0:
-            boardToCheck = self.secondPlayer
-        else:
-            boardToCheck = self.firstPlayer
+
+        board = self.checkOpponentBoard(player)[0]
 
         if row <= self.lastIndex and col <= self.lastIndex:
-            if boardToCheck[row][col] == '.' or boardToCheck[row][col] == 'X':
+            if board[row][col] == '.' or board[row][col] == 'X':
                 alreadyHit = True
             else:
                 alreadyHit = False

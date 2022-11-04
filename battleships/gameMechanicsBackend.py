@@ -24,8 +24,8 @@ class Game:
             if self.currentPlayer == 0 and self.currentPlayer == playerId:
 
                 hit, shipHit = self.board.checkHit(row, col, 0)
-                shipSunk = self.board.checkSunk(shipHit, 0)##change
-                gameOver = self.board.checkDefeated(0)##change
+                shipSunk = self.board.checkSunk(shipHit, 0)
+                gameOver = self.board.checkDefeated(0)
 
             elif self.currentPlayer == 1 and self.currentPlayer == playerId:
                 hit, shipHit = self.board.checkHit(row, col, 1)
