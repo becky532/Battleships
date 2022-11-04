@@ -76,7 +76,8 @@ class Board:
         board = self.checkBoard(player)[0]
 
         placementValid = True
-        if col + length - 1 <= self.lastIndex:
+        endCell = col + length - 1
+        if endCell <= self.lastIndex:
             for colInd in range(col, col + length):
                 if board[row][colInd] != 0:
                     placementValid = False
@@ -104,7 +105,7 @@ class Board:
 
         shipDict = self.checkBoard(player)[1]
 
-        if row <= self.lastIndex and col <= self.lastIndex:
+        if 0 <= row <= self.lastIndex and 0 <= col <= self.lastIndex:
             shipLength = shipDict[shipType]['length']
             placementValid = self.validateInitialPlacement(shipLength, row, col, player)
 
@@ -239,7 +240,10 @@ class Board:
 
     def checkHit(self, row, col, player):
 
-        board = self.checkBoard(player)[0]
+        if player == 0:
+            board = self.secondPlayer
+        else:
+            board = self.firstPlayer
 
         if row <= self.lastIndex and col <= self.lastIndex:
             value = board[row][col]
@@ -270,8 +274,12 @@ class Board:
 
     def knockOutCell(self, ship, row, col, player):
 
-        board = self.checkBoard(player)[0]
-        shipDict = self.checkBoard(player)[1]
+        if player == 0:
+            board = self.secondPlayer
+            shipDict = self.secondPlayerDict
+        else:
+            board = self.firstPlayer
+            shipDict = self.firstPlayerDict
 
         cell = shipDict[ship]['position'].index([row, col])
         shipDict[ship]['position'][cell] = 'X'
@@ -279,7 +287,10 @@ class Board:
 
     def checkSunk(self, shipType, player):
 
-        shipDict = self.checkBoard(player)[1]
+        if player == 0:
+            shipDict = self.secondPlayerDict
+        else:
+            shipDict = self.firstPlayerDict
 
         shipSunk = False
         if shipType is not None:
@@ -294,7 +305,10 @@ class Board:
 
     def checkDefeated(self, player):
 
-        board = self.checkBoard(player)[0]
+        if player == 0:
+            board = self.secondPlayer
+        else:
+            board = self.firstPlayer
 
         listCells = []
         for i in range(7):
@@ -307,10 +321,6 @@ class Board:
             gameOver = False
 
         return gameOver
-
-    # def listAttacks(self, row, col, player):
-    #     listChosenCells = self.checkBoard(player)[2]
-    #     listChosenCells.append([row, col])
 
     def checkAllPiecesPlaced(self, player):
         board = self.checkBoard(player)[0]

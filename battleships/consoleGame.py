@@ -53,7 +53,7 @@ def game():
 
     while gameOver == False:
 
-        if battleships.currentPlayer == 1:
+        if battleships.currentPlayer == 0:
             currentPlayer = 'Player 1'
             playerID = 0
             opponent = 'Player 2'
@@ -88,22 +88,28 @@ def game():
                         logging.info(f"{currentPlayer} has chosen a cell outside of grid")
                         continue
 
-                validHit, hit, shipHit, shipSunk = battleships.fire(row, col)
-                if validHit == True:
-                    if hit == True:
-                        if shipSunk == True:
-                            print(f"You have sunk your opponent's {shipHit}")
-                            logging.info(f"{currentPlayer} has sunk {opponent}'s {shipHit}")
-                            gameOver = battleships.checkGameOver()
+                attack = battleships.fire(row, col, playerID)
+                if attack is not None:
+                    validHit = attack[0]
+                    hit = attack[1]
+                    shipHit = attack[2]
+                    shipSunk = attack[3]
 
+                    if validHit == True:
+                        if hit == True:
+                            if shipSunk == True:
+                                print(f"You have sunk your opponent's {shipHit}")
+                                logging.info(f"{currentPlayer} has sunk {opponent}'s {shipHit}")
+                                gameOver = battleships.checkGameOver()
+
+                            else:
+                                print(f"You hit your opponent's {shipHit}")
+                                logging.info(f"{currentPlayer} has hit {opponent}'s {shipHit} at [{row},{col}]")
                         else:
-                            print(f"You hit your opponent's {shipHit}")
-                            logging.info(f"{currentPlayer} has hit {opponent}'s {shipHit} at [{row},{col}]")
+                            print("You missed")
+                            logging.info(f"{currentPlayer} failed to hit {opponent} at [{row}, {col}]")
                     else:
-                        print("You missed")
-                        logging.info(f"{currentPlayer} failed to hit {opponent} at [{row}, {col}]")
-                else:
-                    print("Invalid cell. Try again")
+                        print("Invalid cell. Try again")
 
     print(f"Game is over. {currentPlayer} has won the game!")
 
