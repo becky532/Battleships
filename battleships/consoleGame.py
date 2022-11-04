@@ -94,14 +94,13 @@ def game():
                     hit = attack[1]
                     shipHit = attack[2]
                     shipSunk = attack[3]
+                    gameOver = attack[4]
 
                     if validHit == True:
                         if hit == True:
                             if shipSunk == True:
                                 print(f"You have sunk your opponent's {shipHit}")
                                 logging.info(f"{currentPlayer} has sunk {opponent}'s {shipHit}")
-                                gameOver = battleships.checkGameOver()
-
                             else:
                                 print(f"You hit your opponent's {shipHit}")
                                 logging.info(f"{currentPlayer} has hit {opponent}'s {shipHit} at [{row},{col}]")
