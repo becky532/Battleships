@@ -19,7 +19,7 @@ class AI:
         return cls._instance
 
     def initialise(self):
-        self.targets = {'Carrier': [[0, 2]],
+        self.targets = {'Carrier': [],
                         'Battleship': [],
                         'Cruiser': [],
                         'Submarine': [],
@@ -37,19 +37,6 @@ class AI:
     def AIRandomAttackMoves(self):  ###just return
         guessRow = random.randint(0, 6)
         guessCol = random.randint(0, 6)
-        # print([guessRow, guessCol])
-        # alreadyHit = True
-        # while alreadyHit == True:
-        #     alreadyHit = self.board.checkDuplicateAttack(guessRow, guessCol, self.playerId)  ##AI always player 2
-        #     attack = self.game.fire(guessRow, guessCol, self.playerId)
-        #     hitSuccessful = attack[1]
-        #     shipSunk = attack[3]
-        #     shipHit = attack[2]
-        #     if hitSuccessful == True:
-        #         self.targets[shipHit].append([guessRow, guessCol])
-        #
-        #     if shipSunk == True:
-        #         self.destroyed[shipHit] = True
 
         return guessRow, guessCol
 
@@ -69,7 +56,14 @@ class AI:
             hitCells = self.targets[shipToAttack]
             hitRow = hitCells[0][0]
             hitCol = hitCells[0][1]  ###what if 0 or 6
-            possibleMoves.extend([[hitRow, hitCol + 1], [hitRow + 1, hitCol]]) ###need to add negative cells
+            if hitRow != 0:
+                possibleMoves.append([hitRow - 1, hitCol])
+            if hitRow != 5:
+                possibleMoves.append([hitRow + 1, hitCol])
+            if hitCol != 0:
+                possibleMoves.append([hitRow, hitCol - 1])
+            if hitCol != 5:
+                possibleMoves.append([hitRow, hitCol + 1])
 
         elif len(self.targets[shipToAttack]) > 1:
             hitCells = self.targets[shipToAttack]
@@ -116,21 +110,20 @@ class AI:
             move = random.choice(possibleMoves)
 
         else:
-            possibleMoves = self.AIRandomAttackMoves()
-            move = random.choice(possibleMoves)
+            move = self.AIRandomAttackMoves()
 
         return move
 
 
 
 if __name__ == '__main__':
-    # board = Board.instance()
-    # board.initialise()
-    # game = Game(board)
-    # AI = AI.instance() ##player ID for AI is 1 (player 2)
-    # AI.initialise()
-    # moves = AI.decideAttack()
-    # print(moves)
+    board = Board.instance()
+    board.initialise()
+    game = Game(board)
+    AI = AI.instance() ##player ID for AI is 1 (player 2)
+    AI.initialise()
+    moves = AI.decideAttack()
+    print(moves)
 
 
 
