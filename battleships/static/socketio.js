@@ -19,6 +19,7 @@ socket.on('personalReady', (playerNum) => {
         player2Ready = true;
     }
     document.getElementById('all-ready').classList.add("invisible");
+    document.getElementById("clear-board").classList.add('invisible');
     stopBoatsDragging();
     // ADD CODE TO STOP SHIPS BEING DRAGGED, HIDE BOAT TEXT
 });
@@ -39,4 +40,12 @@ socket.on('attackResult', (attackResult, coord) => {
 
 socket.on('defenceResult', (attackResult, coord) => {
     showEnemyAttack(attackResult, coord);
+});
+
+socket.on('gameVictory', ()=> {
+    alert('YOU WON! WOOO!');
+});
+
+socket.on('gameDefeat', ()=> {
+    alert('Better luck next time. Loser.');
 });

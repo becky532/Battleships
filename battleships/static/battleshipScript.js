@@ -7,7 +7,7 @@ let boatSelected = {};
 boatSelected.orientation = "horizontal";
 let player1Ready = false;
 let player2Ready = false;
-enemyZone.addEventListener('mouseover',()=> {
+enemyZone.addEventListener('mouseover', ()=> {
     cursor.removeAttribute("style","opacity: 0");
 })
 enemyZone.addEventListener('mouseleave', ()=> {
@@ -18,39 +18,34 @@ enemyZone.addEventListener('mousemove', event => {
   cursor.setAttribute("style", "top: "+(event.pageY - 10)+"px; left: "+(event.pageX - 10)+"px;")
 })
 
+function initialiseBoats(){
+    let boatArray = Array.from(document.getElementsByClassName("boat"));
+    boatArray.forEach((element) => {
+        // add event listener based on the data type the ships are coming in as
+        // be able to click on grid to try and call a function
+        // drag and drop ships
+        element.addEventListener("drag", (event) => {
+          console.log("dragging");
+        });
 
-let boatArray = Array.from(document.getElementsByClassName("boat"));
-boatArray.forEach((element) => {
-    // add event listener based on the data type the ships are coming in as
-    // be able to click on grid to try and call a function
-    // drag and drop ships
-    element.addEventListener("drag", (event) => {
-      console.log("dragging");
+        element.addEventListener("dragstart", (event) => {
+          // store a ref. on the dragged elem
+          boatSelected.html = event.target;
+          boatSelected.shipName = event.target.id;
+          console.log(boatSelected.shipName);
+          event.target.classList.add("dragging");
+          boatSelected.pickPoint = [event.offsetX, event.offsetY];
+          socket.emit('removeBoatIfOnBoard', boatSelected.shipName)
+        });
+        element.addEventListener("dragend", (event) => {
+          // reset the transparency
+          event.target.classList.remove("dragging");
+          console.log("THE INPUT COORDS ARE " + boatSelected.gridCoord);
+        });
+
     });
-
-    element.addEventListener("dragstart", (event) => {
-      // store a ref. on the dragged elem
-      boatSelected.html = event.target;
-      boatSelected.shipName = event.target.id;
-      console.log(boatSelected.shipName);
-      event.target.classList.add("dragging");
-      boatSelected.pickPoint = [event.offsetX, event.offsetY];
-      socket.emit('removeBoatIfOnBoard', boatSelected.shipName)
-    });
-
-//    element.addEventListener("dragover", (event) => {
-//      // reset the transparency
-//      event.target.classList.remove("dragging");
-//      console.log("dragging over box");
-//    });
-
-    element.addEventListener("dragend", (event) => {
-      // reset the transparency
-      event.target.classList.remove("dragging");
-      console.log("THE INPUT COORDS ARE " + boatSelected.gridCoord);
-    });
-
-});
+}
+initialiseBoats();
 
 dropzone.addEventListener("dragover", (event)=> {
     let xCoord = Math.round((event.offsetX-boatSelected.pickPoint[0])/gridSquareSize);
@@ -58,13 +53,13 @@ dropzone.addEventListener("dragover", (event)=> {
     let yCoord = Math.round((event.offsetY-boatSelected.pickPoint[1])/gridSquareSize);
     console.log("Ycoord = " + yCoord);
     boatSelected.gridCoord = [xCoord, yCoord];
-    boatSelected.position = [xCoord * gridSquareSize, yCoord * gridSquareSize]
+    boatSelected.position = [xCoord * gridSquareSize, yCoord * gridSquareSize];
     event.preventDefault(); //allows object to drop
 });
 
 dropzone.addEventListener("drop", (event)=> {
     console.log("DROPPED");
-    dropValid()
+    dropValid();
 });
 
 
@@ -74,13 +69,20 @@ function dropValid(){
 }
 
 function placeShip(){
-    dropzone.appendChild(boatSelected.html)
-    boatSelected.html.style.transform = `translate(${boatSelected.position[0]}px,${boatSelected.position[1]}px)`
-    boatSelected.html.style.position = "absolute"
+    dropzone.appendChild(boatSelected.html);
+    boatSelected.html.style.transform = `translate(${boatSelected.position[0]}px,${boatSelected.position[1]}px)`;
+    boatSelected.html.style.position = "absolute";
 }
 
 $('#all-ready').on('click', function() {
-    socket.emit('readyCheck')
+    socket.emit('readyCheck');
+})
+
+$('#clear-board').on('click', function() {
+    socket.emit('clearBoard');
+    boatsOnGrid = document.querySelectorAll("#dropzone .boat").forEach((element) => element.remove());
+    resetBoats();
+    initialiseBoats();
 })
 
 enemyZone.addEventListener("click", (event) => {
@@ -124,9 +126,7 @@ function stopBoatsDragging(){
     boatArray.forEach((element) => {
         element.setAttribute("draggable", false);
     });
-    test = document.querySelector(".boats-here");
-    console.log(test);
-    test.classList.add('invisible');
+    document.querySelector(".boats-here").classList.add('invisible');
 }
 
 
@@ -154,4 +154,74 @@ function decorateMiss(coord){
   <div class="water5"></div>
   </div>
   `
+}
+
+function resetBoats(){
+    document.getElementById('boats-menu').innerHTML = `
+            <div class="boat carrier-container shadow" id="carrier" draggable="true">
+                <div class="carrier" id="carrier-body">
+                    <div class="carrier-part carrier-base p1color"></div>
+                    <div class="carrier-part shadow">
+                        <div class="carrier-part carrier-platform p1color"></div>
+                        <div class="carrier-lines1"></div>
+                        <div class="carrier-lines2"></div>
+                        <div class="carrier-lines3"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="boat battleship-container shadow" id="battleship" draggable="true">
+                <div class="battleship" id="battleship-body">
+                    <div class="battleship-part battleship-base p1color shadow"></div>
+                    <div class="battleship-part shadow">
+                        <div class=" battleship-part battleship-heliport p1color shadow"></div>
+                        <div class="battleship-part shadow">
+                            <div class=" battleship-part battleship-helicopter p1color"></div>
+                            <div class=" battleship-part battleship-cover p1color"></div>
+                            <div class=" battleship-part battleship-antena p1color"></div>
+                            <div class=" battleship-part battleship-front p1color"></div>
+                            <div class="battleship-part shadow">
+                                <div class=" battleship-part battleship-cannon p1color"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="boat cruiser-container shadow" id="cruiser" draggable="true">
+                <div class="cruiser" id="cruiser-body">
+                    <div class="cruiser-part cruiser1 p1color"></div>
+                    <div class="cruiser-part shadow">
+                        <div class="cruiser-part cruiser2 p1color"></div>
+                        <div class="cruiser-part shadow">
+                            <div class="cruiser-part cruiser3 p1color"></div>
+                            <div class="cruiser-part shadow">
+                                <div class="cruiser-part cruiser4 p1color"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="boat submarine-container shadow" id="submarine" draggable="true">
+                <div class="submarine" id="submarine-body">
+                    <div class="submarine-part shadow">
+                        <div class="submarine-part submarine1 p1color"></div>
+                        <div class="submarine-part shadow">
+                            <div class="submarine-part submarine2 p1color">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="boat destroyer-container shadow" id="destroyer" draggable="true">
+                <div class="destroyer" id="destroyer-body">
+                    <div class="destroyer-part shadow">
+                        <div class="destroyer-part p1color destroyer1 "></div>
+                        <div class="destroyer-part shadow">
+                            <div class="destroyer-part p1color destroyer2"></div>
+                            <div class="destroyer-part p1color destroyer3">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    `;
 }
