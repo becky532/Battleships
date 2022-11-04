@@ -1,6 +1,7 @@
 from flask_socketio import SocketIO
 from flask import Flask, request
 from gameBack import Board
+from gameMechanicsBackend import Game
 
 server = Flask(__name__)
 server.config['SECRET_KEY'] = 'TeamTitanic'
@@ -55,6 +56,8 @@ def readyCheck():
 
 @socketio.on('attack')
 def attack(coord):
+    board = Board.instance()
+    game = Game(board)
     sid = request.sid
     playerId = users.index(sid)
     # turnToAttack(playerId)
@@ -67,6 +70,8 @@ def attack(coord):
         attackResult = False
         socketio.emit('attackResult', (attackResult, coord), to=users[playerId])
         socketio.emit('defenceResult', (attackResult, coord), to=users[otherId])
+
+        #if statement checking game over, if true broadcast victory page?
 
 
 @socketio.on('removeBoatIfOnBoard')
