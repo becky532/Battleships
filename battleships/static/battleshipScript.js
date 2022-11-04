@@ -35,7 +35,7 @@ boatArray.forEach((element) => {
       console.log(boatSelected.shipName);
       event.target.classList.add("dragging");
       boatSelected.pickPoint = [event.offsetX, event.offsetY];
-
+      socket.emit('removeBoatIfOnBoard', boatSelected.shipName)
     });
 
 //    element.addEventListener("dragover", (event) => {
@@ -119,6 +119,16 @@ function showEnemyAttack(attackResult, coord){
         decorateMiss(coord, player);
     }
 }
+
+function stopBoatsDragging(){
+    boatArray.forEach((element) => {
+        element.setAttribute("draggable", false);
+    });
+    test = document.querySelector(".boats-here");
+    console.log(test);
+    test.classList.add('invisible');
+}
+
 
 function decorateHit(coord, player){
   player.innerHTML += `

@@ -18,7 +18,8 @@ socket.on('personalReady', (playerNum) => {
     else if (playerNum == 1){
         player2Ready = true;
     }
-    document.getElementById('all-ready').classList.add("invisible")
+    document.getElementById('all-ready').classList.add("invisible");
+    stopBoatsDragging();
     // ADD CODE TO STOP SHIPS BEING DRAGGED, HIDE BOAT TEXT
 });
 
