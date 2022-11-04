@@ -349,8 +349,6 @@ class Board:
 
         return alreadyHit
 
-
-
 if __name__ == '__main__':
     pass
 

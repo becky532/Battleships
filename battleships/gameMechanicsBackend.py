@@ -1,3 +1,5 @@
+import random
+
 from battleships.gameBack import Board
 
 class Game:
@@ -50,6 +52,7 @@ class Game:
             gameOver = self.board.checkDefeated(0)
 
         return gameOver
+
 
 if __name__ == '__main__':
     pass
