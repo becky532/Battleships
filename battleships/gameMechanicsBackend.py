@@ -15,9 +15,10 @@ class Game:
             self.currentPlayer = 0
 
     def fire(self, row, col, playerId):
-        hit = None
-        shipHit = None
-        shipSunk = None
+        hit = False
+        shipHit = False
+        shipSunk = False
+        gameOver = False
 
         if 0 <= row <= 6 and 0 <= col <= 6:
             validHit = True
@@ -39,7 +40,7 @@ class Game:
         else:
             validHit = False
 
-        return validHit, hit, shipHit, shipSunk
+        return validHit, hit, shipHit, shipSunk, gameOver
     def showPlayerBoard(self):
         if self.currentPlayer == 0:
             self.board.printBoard(0)
@@ -53,18 +54,6 @@ class Game:
             gameOver = self.board.checkDefeated(0)
 
         return gameOver
-
-    def AIRandomAttack(self):
-        guessRow = random.randint(0, 6)
-        guessCol = random.randint(0, 6)
-        alreadyHit = True
-        while alreadyHit == True:
-            alreadyHit = self.board.checkDuplicateAttack(guessRow, guessCol, 1)
-            self.fire(guessRow, guessCol)
-    # def AISmartAttack(self):
-
-
-
 
 if __name__ == '__main__':
     pass
