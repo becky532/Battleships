@@ -35,7 +35,7 @@ boatArray.forEach((element) => {
       console.log(boatSelected.shipName);
       event.target.classList.add("dragging");
       boatSelected.pickPoint = [event.offsetX, event.offsetY];
-
+      socket.emit('removeBoatIfOnBoard', boatSelected.shipName)
     });
 
 //    element.addEventListener("dragover", (event) => {
@@ -67,11 +67,6 @@ dropzone.addEventListener("drop", (event)=> {
     dropValid()
 });
 
-//async function dropValid(){
-//    const response = await fetch("/validDrop/" + boatSelected.gridCoord);
-//    let isValid = await response.json();
-//    return isValid;
-//}
 
 function dropValid(){
     boat = [boatSelected.gridCoord, boatSelected.shipName];
@@ -100,7 +95,7 @@ enemyZone.addEventListener("click", (event) => {
 });
 
 function showAttackResult(attackResult, coord){
-    player = document.getElementById('enemyZone');
+    player = enemyZone;
     console.log('showAttackResult');
     console.log(coord);
     console.log(player);
@@ -113,7 +108,7 @@ function showAttackResult(attackResult, coord){
 }
 
 function showEnemyAttack(attackResult, coord){
-    player = document.getElementById('dropzone');
+    player = dropzone;
     console.log('showEnemyAttack');
     console.log(coord);
     console.log(player);
@@ -124,6 +119,16 @@ function showEnemyAttack(attackResult, coord){
         decorateMiss(coord, player);
     }
 }
+
+function stopBoatsDragging(){
+    boatArray.forEach((element) => {
+        element.setAttribute("draggable", false);
+    });
+    test = document.querySelector(".boats-here");
+    console.log(test);
+    test.classList.add('invisible');
+}
+
 
 function decorateHit(coord, player){
   player.innerHTML += `

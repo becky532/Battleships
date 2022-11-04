@@ -1,19 +1,11 @@
-from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO
 from flask import Flask, request
 from gameBack import Board
+from gameMechanicsBackend import Game
 
 server = Flask(__name__)
 server.config['SECRET_KEY'] = 'TeamTitanic'
 socketio = SocketIO(server, cors_allowed_origins='*')
-
-
-@socketio.on('message')
-def handleMessage(msg):
-    print(msg)
-    # gameback function
-    send(msg, broadcast=True) #player 2 sent (coord, if hit)
-
-    # can we return data to player 1?
 
 
 @socketio.on('connect')
@@ -23,7 +15,6 @@ def connect():
     userID = ''
     for index, user in enumerate(users):
         if user is None:
-            userID = sid        # check userID '' later and disconnect connection if so
             users[index] = sid
             break
 
@@ -39,33 +30,34 @@ def disconnect():
 
 @socketio.on('shipCheck')
 def validMoveCheck(boat):
+    board = Board.instance()
     sid = request.sid
+    playerId = users.index(sid)
     print(boat)
-    row = boat[0][1]
-    col = boat[0][1]
-    print(sid)
-    validPlacement = True
+    row = 6 - boat[0][1]
+    col = boat[0][0]
+    shipType = boat[1].title()
+    validPlacement = board.placeShip(row, col, shipType, playerId)
     socketio.emit('shipCheck', validPlacement, to=sid)
 
 
 @socketio.on('readyCheck')
 def readyCheck():
     if None not in users:       # checks that there are two users connected
-        # board = Board.instance()
+        board = Board.instance()
         sid = request.sid
         playerId = users.index(sid)
-        if playerId == 0:
-            otherId = 1
-        else:
-            otherId = 0
-        # backend ready is true
-        ready = True
+        otherId = getOtherId(playerId)
+        ready = board.checkAllPiecesPlaced(playerId)
         if ready:
             socketio.emit('personalReady', playerId, to=users[playerId])
             socketio.emit('enemyReady', playerId, to=users[otherId])
 
+
 @socketio.on('attack')
 def attack(coord):
+    board = Board.instance()
+    game = Game(board)
     sid = request.sid
     playerId = users.index(sid)
     # turnToAttack(playerId)
@@ -73,19 +65,40 @@ def attack(coord):
     turnToAttack = True
     validCoord = True
     if turnToAttack and validCoord:
-        if playerId == 0:
-            otherId = 1
-        else:
-            otherId = 0
+        otherId = getOtherId(playerId)
         # attack player board and return result
         attackResult = False
         socketio.emit('attackResult', (attackResult, coord), to=users[playerId])
         socketio.emit('defenceResult', (attackResult, coord), to=users[otherId])
 
+        #if statement checking game over, if true broadcast victory page?
+
+
+@socketio.on('removeBoatIfOnBoard')
+def attack(shipName):
+    board = Board.instance()
+    sid = request.sid
+    playerId = users.index(sid)
+    shipName = shipName.title()
+    board.remove(shipName, playerId)
+
+
+def getOtherId(playerId):
+    if playerId == 0:
+        otherId = 1
+    else:
+        otherId = 0
+    return otherId
+
+
+def main():
+    board = Board.instance()
+    board.initialise()
+    print("Server has started!")
+    socketio.run(server, port=5555)
+
 
 if __name__ == "__main__":
     users = [None, None]
-    # board = Board.instance()
-    # board.initialise()
-    socketio.run(server, port=5555)
+    main()
 
