@@ -57,23 +57,24 @@ def readyCheck():
 @socketio.on('attack')
 def attack(coord):
     board = Board.instance()
-    game = Game(board)
     sid = request.sid
     playerId = users.index(sid)
-    row = 6 - coord[0][1]
-    col = coord[0][0]
+    row = 6 - coord[1]
+    col = coord[0]
     alreadyHit = board.checkDuplicateAttack(row, col, playerId)
     if not alreadyHit:
         attackData = game.fire(row, col, playerId)
         if attackData is not None:
-            validCoord = attack[0]
-            attackResult = attack[1]
+            validCoord = attackData[0]
+            attackResult = attackData[1]
+            gameOver = False        # DUMMY DATA HERE CHANGE THIS
             if validCoord:
                 otherId = getOtherId(playerId)
                 # attack player board and return result
                 socketio.emit('attackResult', (attackResult, coord), to=users[playerId])
                 socketio.emit('defenceResult', (attackResult, coord), to=users[otherId])
-
+            if gameOver:
+                socketio.emit('gameOver', playerId, broadcast=True)
             #if statement checking game over, if true broadcast victory page?
 
 
@@ -94,14 +95,15 @@ def getOtherId(playerId):
     return otherId
 
 
-def main():
+def initBoard():
     board = Board.instance()
     board.initialise()
-    print("Server has started!")
-    socketio.run(server, port=5555)
 
 
 if __name__ == "__main__":
     users = [None, None]
-    main()
+    initBoard()
+    game = Game(Board.instance())
+    print("Server has started!")
+    socketio.run(server, port=5555)
 
