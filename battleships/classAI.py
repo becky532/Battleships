@@ -19,7 +19,7 @@ class AI:
         return cls._instance
 
     def initialise(self):
-        self.targets = {'Carrier': [],
+        self.targets = {'Carrier': [[0, 2]],
                         'Battleship': [],
                         'Cruiser': [],
                         'Submarine': [],
@@ -69,7 +69,7 @@ class AI:
             hitCells = self.targets[shipToAttack]
             hitRow = hitCells[0][0]
             hitCol = hitCells[0][1]  ###what if 0 or 6
-            possibleMoves.extend([[hitRow, hitCol + 1], [hitRow + 1, hitCol]])
+            possibleMoves.extend([[hitRow, hitCol + 1], [hitRow + 1, hitCol]]) ###need to add negative cells
 
         elif len(self.targets[shipToAttack]) > 1:
             hitCells = self.targets[shipToAttack]
@@ -109,25 +109,28 @@ class AI:
 
         return possibleMoves
 
-    def decideAttackType(self):
+    def decideAttack(self): ####need to return only one value!!!!!!!!
         a = any(self.targets.values())
         if a == True:
             possibleMoves = self.AISmartAttackMoves()
+            move = random.choice(possibleMoves)
+
         else:
             possibleMoves = self.AIRandomAttackMoves()
+            move = random.choice(possibleMoves)
 
-        return possibleMoves
+        return move
 
 
 
 if __name__ == '__main__':
-    board = Board.instance()
-    board.initialise()
-    game = Game(board)
-    AI = AI.instance() ##player ID for AI is 1 (player 2)
-    AI.initialise()
-    moves = AI.decideAttackType()
-    print(moves)
+    # board = Board.instance()
+    # board.initialise()
+    # game = Game(board)
+    # AI = AI.instance() ##player ID for AI is 1 (player 2)
+    # AI.initialise()
+    # moves = AI.decideAttack()
+    # print(moves)
 
 
 
