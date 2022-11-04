@@ -95,7 +95,7 @@ enemyZone.addEventListener("click", (event) => {
 });
 
 function showAttackResult(attackResult, coord){
-    player = document.getElementById('enemyZone');
+    player = enemyZone;
     console.log('showAttackResult');
     console.log(coord);
     console.log(player);
@@ -108,7 +108,7 @@ function showAttackResult(attackResult, coord){
 }
 
 function showEnemyAttack(attackResult, coord){
-    player = document.getElementById('dropzone');
+    player = dropzone;
     console.log('showEnemyAttack');
     console.log(coord);
     console.log(player);

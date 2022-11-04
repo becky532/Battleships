@@ -1,5 +1,4 @@
-from flask import render_template, Blueprint, Flask
-import json
+from flask import render_template, Flask
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'TeamTitanic'
@@ -12,5 +11,3 @@ def main():
 
 if __name__ == "__main__":
     app.run()
-
-

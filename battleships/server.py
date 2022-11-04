@@ -1,4 +1,4 @@
-from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO
 from flask import Flask, request
 from gameBack import Board
 
@@ -73,9 +73,14 @@ def attack(coord):
         socketio.emit('defenceResult', (attackResult, coord), to=users[otherId])
 
 
+def main():
+    board = Board.instance()
+    board.initialise()
+    print("Server has started!")
+    socketio.run(server, port=5555)
+
+
 if __name__ == "__main__":
     users = [None, None]
-    # board = Board.instance()
-    # board.initialise()
-    socketio.run(server, port=5555)
+    main()
 
