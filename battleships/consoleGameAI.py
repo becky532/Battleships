@@ -2,15 +2,61 @@ from gameBack import Board
 from gameMechanicsBackend import Game
 from playerSetup import playerSetup
 from classAI import AI
-from consoleGame import game
 import logging
 import time
 
+def chooseSettings():
+    logging.basicConfig(filename='battleships.log', level=logging.INFO, filemode='w', force=True)
 
-def playerAttack(currentPlayer, gamePlaying: Game, boardPlaying: Board):
+    print("Hello!")
+    print("Lets go on an adventure!")
+    option = input('''
+                                     ______________________________________________
+                                  .-'                     _                        '.
+                                .'                       |-'                        |
+                              .'                         |                          |
+                           _.'               p         _\_/_         p              |
+                        _.'                  |       .'  |  '.       |              |
+                   __..'                     |      /    |    \      |              |
+             ___..'                         .T\    ======+======    /T.             |
+          ;;;\::::                        .' | \  /      |      \  / | '.           |
+          ;;;|::::                      .'   |  \/       |       \/  |   '.         |
+          ;;;/::::                    .'     |   \       |        \  |     '.       |
+                ''.__               .'       |    \      |         \ |       '.     |
+                     ''._          <_________|_____>_____|__________>|_________>    |
+                         '._     (___________|___________|___________|___________)  |
+                            '.    \;;;;;;;;;;o;;;;;o;;;;;o;;;;;o;;;;;o;;;;;o;;;;/   |
+                              '.~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~   |
+                                '. ~ ~ ~ ~ ~ ~ ~ ~ ~Battleship ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  |
+                                  '-.______________________________________________.'
+
+
+        Are you ready to fight?
+        ''').title()
+
+    if option == 'Yes':
+        logging.info("Game started")
+        chooseAI = input("Would you like to play the computer? ").title()
+
+        if chooseAI == 'Yes':
+            logging.info("Playing against computer")
+            gameAI()
+        elif chooseAI == 'No':
+            game()
+    else:
+        print("What a loser.")
+        return
+
+def playerAttack(currentPlayer, gamePlaying: Game, boardPlaying: Board, AI):
     if currentPlayer == 0:
         player = 'Player 1'
         opponent = 'Player 2'
+    elif currentPlayer == 1 and AI == True:
+        player = 'Computer'
+        opponent = 'Player 1'
+    else:
+        player = 'Player 2'
+        opponent = 'Player 1'
 
     prompt = input(f"Ready {player} ").title()
     logging.info(f"Current player: {player}")
@@ -90,48 +136,22 @@ def playerAI(AIPlayer: AI, game:Game, board: Board):
 
     return gameOver
 
-def chooseSettings():
-    logging.basicConfig(filename='battleships.log', level=logging.INFO, filemode='w', force=True)
+def game():
+    board = Board.instance()
+    board.initialise()
 
-    print("Hello!")
-    print("Lets go on an adventure!")
-    option = input('''
-                                     ______________________________________________
-                                  .-'                     _                        '.
-                                .'                       |-'                        |
-                              .'                         |                          |
-                           _.'               p         _\_/_         p              |
-                        _.'                  |       .'  |  '.       |              |
-                   __..'                     |      /    |    \      |              |
-             ___..'                         .T\    ======+======    /T.             |
-          ;;;\::::                        .' | \  /      |      \  / | '.           |
-          ;;;|::::                      .'   |  \/       |       \/  |   '.         |
-          ;;;/::::                    .'     |   \       |        \  |     '.       |
-                ''.__               .'       |    \      |         \ |       '.     |
-                     ''._          <_________|_____>_____|__________>|_________>    |
-                         '._     (___________|___________|___________|___________)  |
-                            '.    \;;;;;;;;;;o;;;;;o;;;;;o;;;;;o;;;;;o;;;;;o;;;;/   |
-                              '.~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~   |
-                                '. ~ ~ ~ ~ ~ ~ ~ ~ ~Battleship ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  |
-                                  '-.______________________________________________.'
+    board.firstPlayer = playerSetup(0)
+    board.secondPlayer = playerSetup(1)
 
+    battleships = Game(board)
+    gameOver = False
+    AIPlaying = False
 
-        Are you ready to fight?
-        ''').title()
+    while gameOver == False:
 
-    if option == 'Yes':
-        logging.info("Game started")
-        chooseAI = input("Would you like to play the computer? ").title()
+        gameOver = playerAttack(battleships.currentPlayer, battleships, board, AIPlaying)
 
-        if chooseAI == 'Yes':
-            logging.info("Playing against computer")
-            gameAI()
-        elif chooseAI == 'No':
-            game()
-    else:
-        print("What a loser.")
-        return
-
+    print(f"Game is over. {battleships.currentPlayer} has won the game!")
 
 def gameAI():
 
@@ -149,7 +169,8 @@ def gameAI():
     while gameOver == False:
 
         if battleships.currentPlayer == 0:
-            gameOver = playerAttack(battleships.currentPlayer, battleships, board)
+            AIPlaying = True
+            gameOver = playerAttack(battleships.currentPlayer, battleships, board, AIPlaying)
         if battleships.currentPlayer == 1:
             print("Computer's turn to attack")
             time.sleep(2)
@@ -161,4 +182,5 @@ def gameAI():
     elif gameOver == True and battleships.currentPlayer == 1:
         print("You lost!")
 
-chooseSettings()
+if __name__ == '__main__':
+    chooseSettings()
