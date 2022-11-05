@@ -9,6 +9,7 @@ class AI:
     def __init__(self):
         raise RuntimeError('Call instance() instead')
 
+
     @classmethod
     def instance(cls):
         if cls._instance is None:
@@ -19,6 +20,7 @@ class AI:
         return cls._instance
 
     def initialise(self):
+        logging.basicConfig(filename='battleships.log', level=logging.INFO, filemode='w', force=True)
         self.targets = {'Carrier': [],
                         'Battleship': [],
                         'Cruiser': [],
@@ -107,6 +109,7 @@ class AI:
         a = any(self.targets.values())
         if a == True:
             possibleMoves = self.AISmartAttackMoves()
+            logging.info(f"Computer's possible moves were:'{possibleMoves}")
             move = random.choice(possibleMoves)
 
         else:

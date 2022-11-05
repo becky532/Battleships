@@ -4,12 +4,16 @@ from playerSetup import playerSetup
 from classAI import AI
 from consoleGame import game
 import logging
+import time
 
-logging.basicConfig(filename='battleships.log', level=logging.INFO, filemode='w', force=True)
 
 def playerAttack(currentPlayer, gamePlaying: Game, boardPlaying: Board):
-    prompt = input(f"Ready {currentPlayer}? ").title()
-    logging.info(f"Current player: {currentPlayer}")
+    if currentPlayer == 0:
+        player = 'Player 1'
+        opponent = 'Player 2'
+
+    prompt = input(f"Ready {player} ").title()
+    logging.info(f"Current player: {player}")
     gameOver = False
 
     if prompt == 'Yes':
@@ -23,16 +27,16 @@ def playerAttack(currentPlayer, gamePlaying: Game, boardPlaying: Board):
                 col = int(col)
             except ValueError:
                 print("Invalid input!")
-                logging.info(f"{currentPlayer} has made an invalid cell choice")
+                logging.info(f"{player} has made an invalid cell choice")
                 continue
             else:
                 duplicateHit = boardPlaying.checkDuplicateAttack(row, col, currentPlayer)
                 if duplicateHit == True:
                     print("Already hit this cell, try again!")
-                    logging.info(f"{currentPlayer} has chosen cell [{row}, {col}] again.")
+                    logging.info(f"{player} has chosen cell [{row}, {col}] again.")
                     continue
                 elif duplicateHit is None:
-                    logging.info(f"{currentPlayer} has chosen a cell outside of grid")
+                    logging.info(f"{player} has chosen a cell outside of grid")
                     continue
 
             attack = gamePlaying.fire(row, col, currentPlayer)
@@ -47,19 +51,48 @@ def playerAttack(currentPlayer, gamePlaying: Game, boardPlaying: Board):
                     if hit == True:
                         if shipSunk == True:
                             print(f"You have sunk your opponent's {shipHit}")
-                            logging.info(f"{currentPlayer} has sunk {currentPlayer}'s {shipHit}")
+                            logging.info(f"{player} has sunk {opponent}'s {shipHit}")
                         else:
                             print(f"You hit your opponent's {shipHit}")
-                            logging.info(f"{currentPlayer} has hit {currentPlayer}'s {shipHit} at [{row},{col}]")
+                            logging.info(f"{player} has hit {opponent}'s {shipHit} at [{row},{col}]")
                     else:
                         print("You missed")
-                        logging.info(f"{currentPlayer} failed to hit {currentPlayer} at [{row}, {col}]")
+                        logging.info(f"{player} failed to hit {opponent} at [{row}, {col}]")
                 else:
                     print("Invalid cell. Try again")
     return gameOver
 
+def playerAI(AIPlayer: AI, game:Game, board: Board):
+    duplicate = True
+    while duplicate == True:
+        [row, col] = AIPlayer.decideAttack()
+        duplicate = board.checkDuplicateAttack(row, col, 1)
+
+    AIAttack = game.fire(row, col, 1)  ##need to then add to AI list!!!
+    logging.info(f"Computer attacked at [{row}, {col}]")
+
+    success = AIAttack[1]
+    shipHit = AIAttack[2]
+    shipSunk = AIAttack[3]
+    gameOver = AIAttack[4]
+
+    if success == True:
+        AIPlayer.targets[shipHit].append([row, col])
+        print(f"The computer has hit your {shipHit} at [{row}, {col}]")
+        logging.info(f"Computer hit player's {shipHit} at [{row}, {col}]")
+    else:
+        print("The computer failed to hit a ship")
+        logging.info("Computer missed")
+    if shipSunk == True:
+        AIPlayer.destroyed[shipHit] = True
+        print(f"The computer has sunk your {shipHit}. Oh no!")
+        logging.info(f"Computer has sunk player's {shipHit}")
+
+    return gameOver
 
 def chooseSettings():
+    logging.basicConfig(filename='battleships.log', level=logging.INFO, filemode='w', force=True)
+
     print("Hello!")
     print("Lets go on an adventure!")
     option = input('''
@@ -89,7 +122,9 @@ def chooseSettings():
     if option == 'Yes':
         logging.info("Game started")
         chooseAI = input("Would you like to play the computer? ").title()
+
         if chooseAI == 'Yes':
+            logging.info("Playing against computer")
             gameAI()
         elif chooseAI == 'No':
             game()
@@ -99,6 +134,7 @@ def chooseSettings():
 
 
 def gameAI():
+
     board = Board.instance()
     board.initialise()
     board.firstPlayer = playerSetup(0)
@@ -107,39 +143,22 @@ def gameAI():
     AIPlayer.initialise()
     board.randomiseBoard(1)  ##making player 2 (AI) board
     battleships = Game(board)
+
     gameOver = False
 
     while gameOver == False:
 
         if battleships.currentPlayer == 0:
-            currentPlayer = 'Player 1'
-            playerID = 0
-            opponent = 'Player 2'
-        else:
-            currentPlayer = 'Player 2'
-            opponent = 'Player 1'
-            playerID = 1
-
-        if battleships.currentPlayer == 0:
             gameOver = playerAttack(battleships.currentPlayer, battleships, board)
         if battleships.currentPlayer == 1:
-            row = AIPlayer.decideAttack()[0]
-            col = AIPlayer.decideAttack()[1]
-            AIAttack = battleships.fire(row, col, 1) ##need to then add to AI list!!!
-            success = AIAttack[1]
-            shipHit = AIAttack[2]
-            shipSunk = AIAttack[3]
-            gameOver = AIAttack[4]
-            if success == True:
-                AIPlayer.targets[shipHit].append([row, col])
-                print(f"The computer has hit your {shipHit} at [{row}, {col}]")
-            if shipSunk == True:
-                AIPlayer.destroyed[shipHit] = True
-                print(f"The computer has sunk your {shipHit}. Oh no!")
-
-            print(AIAttack)
+            print("Computer's turn to attack")
+            time.sleep(2)
+            gameOver = playerAI(AIPlayer, battleships, board)
 
 
-    print(f"Game is over. {currentPlayer} has won the game!")
+    if gameOver == True and battleships.currentPlayer == 0:
+        print("Congratulations, you beat the computer")
+    elif gameOver == True and battleships.currentPlayer == 1:
+        print("You lost!")
 
 chooseSettings()
