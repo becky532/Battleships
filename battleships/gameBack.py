@@ -92,8 +92,8 @@ class Board:
                     if board[rowInd][col] != 0:
                         placementValid = False
                         break
-        else:
-            placementValid = False
+            else:
+                placementValid = False
 
         return placementValid
 
@@ -119,7 +119,6 @@ class Board:
             shipLength = shipDict[shipType]['length']
             orientation = shipDict[shipType]['orientation']
             placementValid = self.validateInitialPlacement(shipLength, row, col, orientation, player)
-            shipDict[shipType]['position'] = []
 
             if placementValid == True and orientation == 'horizontal':
 
@@ -128,7 +127,9 @@ class Board:
                     self.place(shipType, player)
 
             elif placementValid == True and orientation == 'vertical':
-                for cellRow in range(row - shipLength + 1, row + 1):
+
+                for cellRow in range(row, row - shipLength, -1):
+
                     shipDict[shipType]['position'].append([cellRow, col])
                     self.place(shipType, player)
         else:

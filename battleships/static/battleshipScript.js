@@ -24,7 +24,6 @@ function initialiseBoats(){
         // be able to click on grid to try and call a function
         // drag and drop ships
         element.addEventListener("drag", (event) => {
-          console.log("dragging");
         });
 
         element.addEventListener("dragstart", (event) => {
@@ -48,9 +47,7 @@ initialiseBoats();
 
 dropzone.addEventListener("dragover", (event)=> {
     let xCoord = Math.round((event.offsetX-boatSelected.pickPoint[0])/gridSquareSize);
-    console.log("Xcoord = " + xCoord);
     let yCoord = Math.round((event.offsetY-boatSelected.pickPoint[1])/gridSquareSize);
-    console.log("Ycoord = " + yCoord);
     boatSelected.gridCoord = [xCoord, yCoord];
     boatSelected.position = [xCoord * gridSquareSize, yCoord * gridSquareSize];
     event.preventDefault(); //allows object to drop
@@ -71,24 +68,25 @@ function placeShip(){
     dropzone.appendChild(boatSelected.html);
     boatSelected.html.style.transform = `translate(${boatSelected.position[0]}px,${boatSelected.position[1]}px)`;
     boatSelected.html.style.position = "absolute";
-    AddRotation();
+    console.log('ERROR CHECK');
+    console.log(boatSelected.html.getAttribute('addedRotation'));
+    if (boatSelected.html.getAttribute('addedRotation') !== 'true') {
+        addRotation();
+        boatSelected.html.setAttribute('addedRotation','true');
+    }
 }
 
-function AddRotation(){
+function addRotation(){
     boatSelected.html.addEventListener('click', (event)=> {
         console.log('rotating');
         boatSelected.shipName = event.currentTarget.id;
-        console.log(boatSelected);
         boatSelected.html = document.querySelector(`#${boatSelected.shipName}`);
-        console.log(boatSelected);
         boatSelected.htmlBody = document.querySelector(`#${boatSelected.shipName}-body`);
         socket.emit('rotate', boatSelected.shipName);
     });
 }
 
 function rotate(newOrientation){
-    console.log(boatSelected);
-    console.log(boatSelected.html);
     if (newOrientation == 'vertical') {
         boatSelected.htmlBody.classList.remove(`${boatSelected.shipName}`);
         boatSelected.htmlBody.classList.add(`${boatSelected.shipName}R`);
@@ -101,6 +99,7 @@ function rotate(newOrientation){
         boatSelected.html.classList.remove(`${boatSelected.shipName}-containerR`);
         boatSelected.html.classList.add(`${boatSelected.shipName}-container`);
     }
+        console.log('Done rotation');
 }
 
 
