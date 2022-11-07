@@ -76,7 +76,7 @@ class Board:
         board = self.checkBoard(player)[0]
         placementValid = True
         if orientation == 'horizontal':
-            endCol = col + length - 1
+            endCol = col + (length - 1)
             if endCol <= self.lastIndex:
                 for colInd in range(col, col + length):
                     if board[row][colInd] != 0:
@@ -86,9 +86,9 @@ class Board:
                 placementValid = False
 
         elif orientation == 'vertical':
-            endRow = row - length - 1
+            endRow = row - (length - 1)
             if endRow >= 0:
-                for rowInd in range(row - length, row):
+                for rowInd in range(row, row-length, -1):
                     if board[rowInd][col] != 0:
                         placementValid = False
                         break
@@ -119,14 +119,16 @@ class Board:
             shipLength = shipDict[shipType]['length']
             orientation = shipDict[shipType]['orientation']
             placementValid = self.validateInitialPlacement(shipLength, row, col, orientation, player)
+            shipDict[shipType]['position'] = []
 
             if placementValid == True and orientation == 'horizontal':
+
                 for cellCol in range(col, col + shipLength):
                     shipDict[shipType]['position'].append([row, cellCol])
                     self.place(shipType, player)
 
             elif placementValid == True and orientation == 'vertical':
-                for cellRow in range(row - shipLength, col):
+                for cellRow in range(row - shipLength + 1, row + 1):
                     shipDict[shipType]['position'].append([cellRow, col])
                     self.place(shipType, player)
         else:
