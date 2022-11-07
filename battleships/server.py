@@ -38,6 +38,7 @@ def validMoveCheck(boat):
     col = boat[0][0]
     shipType = boat[1].title()
     validPlacement = board.placeShip(row, col, shipType, playerId)
+    board.printBoard(playerId)
     socketio.emit('shipCheck', validPlacement, to=sid)
 
 
@@ -94,6 +95,17 @@ def clearBoard():
     playerId = users.index(sid)
     board.clearBoard(playerId)
     board.printBoard(playerId)
+
+@socketio.on('rotate')
+def rotate(shipName):
+    board = Board.instance()
+    sid = request.sid
+    playerId = users.index(sid)
+    shipName = shipName.title()
+    rotationValid, newOrientation = board.rotateShip(shipName, playerId)
+    if rotationValid:
+        board.printBoard(playerId)
+        socketio.emit('rotate', newOrientation, to=users[playerId])
 
 def getOtherId(playerId):
     if playerId == 0:

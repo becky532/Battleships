@@ -49,3 +49,7 @@ socket.on('gameVictory', ()=> {
 socket.on('gameDefeat', ()=> {
     alert('Better luck next time. Loser.');
 });
+
+socket.on('rotate', (orientation)=> {
+    rotate(orientation);
+});

@@ -4,7 +4,6 @@ let enemyZone = document.getElementById("enemyZone");
 const gridSquareSize = 57;
 const gridSquareAmount = 7;
 let boatSelected = {};
-boatSelected.orientation = "horizontal";
 let player1Ready = false;
 let player2Ready = false;
 enemyZone.addEventListener('mouseover', ()=> {
@@ -72,7 +71,39 @@ function placeShip(){
     dropzone.appendChild(boatSelected.html);
     boatSelected.html.style.transform = `translate(${boatSelected.position[0]}px,${boatSelected.position[1]}px)`;
     boatSelected.html.style.position = "absolute";
+    AddRotation();
 }
+
+function AddRotation(){
+    boatSelected.html.addEventListener('click', (event)=> {
+        console.log('rotating');
+        boatSelected.shipName = event.currentTarget.id;
+        console.log(boatSelected);
+        boatSelected.html = document.querySelector(`#${boatSelected.shipName}`);
+        console.log(boatSelected);
+        boatSelected.htmlBody = document.querySelector(`#${boatSelected.shipName}-body`);
+        socket.emit('rotate', boatSelected.shipName);
+    });
+}
+
+function rotate(newOrientation){
+    console.log(boatSelected);
+    console.log(boatSelected.html);
+    if (newOrientation == 'vertical') {
+        boatSelected.htmlBody.classList.remove(`${boatSelected.shipName}`);
+        boatSelected.htmlBody.classList.add(`${boatSelected.shipName}R`);
+        boatSelected.html.classList.remove(`${boatSelected.shipName}-container`);
+        boatSelected.html.classList.add(`${boatSelected.shipName}-containerR`);
+    }
+    else {
+        boatSelected.htmlBody.classList.remove(`${boatSelected.shipName}R`);
+        boatSelected.htmlBody.classList.add(`${boatSelected.shipName}`);
+        boatSelected.html.classList.remove(`${boatSelected.shipName}-containerR`);
+        boatSelected.html.classList.add(`${boatSelected.shipName}-container`);
+    }
+}
+
+
 
 $('#all-ready').on('click', function() {
     socket.emit('readyCheck');
@@ -128,6 +159,7 @@ function stopBoatsDragging(){
     });
     document.querySelector(".boats-here").classList.add('invisible');
 }
+
 
 
 function decorateHit(coord, player){
