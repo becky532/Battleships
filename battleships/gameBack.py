@@ -194,11 +194,11 @@ class Board:
         checkCells = [point]
         for index in range(1, length):
             if orientation == 'horizontal':
-                newCell = [row + index, col]
+                newCell = [row - index, col]
             elif orientation == 'vertical':
-                newCell = [row, col + index]
+                newCell = [row, col - index]
 
-            if newCell[0] <= self.lastIndex and newCell[1] <= self.lastIndex:
+            if 0 <= newCell[0] <= self.lastIndex and 0 <= newCell[1] <= self.lastIndex:
 
                 if board[newCell[0]][newCell[1]] == 0:
                     checkCells.append(newCell)
@@ -208,6 +208,7 @@ class Board:
                 break
 
         return checkCells
+
 
     def __rotate(self, shipType, newPosition, player):
 
@@ -358,4 +359,13 @@ class Board:
         return alreadyHit
 
 if __name__ == '__main__':
-    pass
+    board = Board.instance()
+    board.initialise()
+    board.placeShip(0, 0, 'Carrier', 0)
+    board.rotateShip('Carrier', 0)
+    board.printBoard(0)
+    board.placeShip(6, 0, 'Battleship', 0)
+    board.rotateShip('Battleship', 0)
+    board.printBoard(0)
+    board.randomiseBoard(1)
+    board.printBoard(1)
