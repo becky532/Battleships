@@ -42,6 +42,10 @@ class AI:
 
         return guessRow, guessCol
 
+    def removeShipAsTarget(self, shipSunk):
+        
+
+
     def AISmartAttackMoves(self):
         listShips = ['Carrier', 'Battleship', 'Cruiser', 'Submarine', 'Destroyer']
         for ship in listShips:
@@ -57,14 +61,14 @@ class AI:
         if len(self.targets[shipToAttack]) == 1:
             hitCells = self.targets[shipToAttack]
             hitRow = hitCells[0][0]
-            hitCol = hitCells[0][1]  ###what if 0 or 6
+            hitCol = hitCells[0][1]
             if hitRow != 0:
                 possibleMoves.append([hitRow - 1, hitCol])
-            if hitRow != 5:
+            if hitRow != 6:
                 possibleMoves.append([hitRow + 1, hitCol])
             if hitCol != 0:
                 possibleMoves.append([hitRow, hitCol - 1])
-            if hitCol != 5:
+            if hitCol != 6:
                 possibleMoves.append([hitRow, hitCol + 1])
 
         elif len(self.targets[shipToAttack]) > 1:
@@ -78,26 +82,28 @@ class AI:
 
             if len(hitCols) == len(set(hitCols)):
                 orientation = 'horizontal'
+                logging.info(f"{shipToAttack} identified as horizontal")
             else:
                 orientation = 'vertical'
+                logging.info(f"{shipToAttack} identified as vertical")
 
             if orientation == 'horizontal':
                 minCol = min(hitCols)
                 maxCol = max(hitCols)
-                row = hitCells[0][1]
+                row = hitCells[0][0]
 
                 if minCol != 0:
                     possibleMoves.append([row, minCol - 1])
-                if maxCol != 5:
+                if maxCol != 6:
                     possibleMoves.append([row, maxCol + 1])
             else:
                 minRow = min(hitRows)
                 maxRow = max(hitRows)
-                col = hitCells[1][0]
+                col = hitCells[0][1]
 
                 if minRow != 0:
                     possibleMoves.append([minRow - 1, col])
-                if maxRow != 5:
+                if maxRow != 6:
                     possibleMoves.append([maxRow + 1, col])
 
         else:
@@ -105,7 +111,8 @@ class AI:
 
         return possibleMoves
 
-    def decideAttack(self): ####need to return only one value!!!!!!!!
+    def decideAttack(self):
+        #if a is True and the ship is not destroyed then do a smart attack
         a = any(self.targets.values())
         if a == True:
             possibleMoves = self.AISmartAttackMoves()
