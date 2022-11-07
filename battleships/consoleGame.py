@@ -112,4 +112,5 @@ def game():
 
     print(f"Game is over. {currentPlayer} has won the game!")
 
-menu()
+if __name__ == '__main__':
+    menu()
