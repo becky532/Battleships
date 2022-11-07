@@ -38,6 +38,7 @@ def validMoveCheck(boat):
     col = boat[0][0]
     shipType = boat[1].title()
     validPlacement = board.placeShip(row, col, shipType, playerId)
+    board.printBoard(playerId)
     socketio.emit('shipCheck', validPlacement, to=sid)
 
 
@@ -67,25 +68,44 @@ def attack(coord):
         if attackData is not None:
             validCoord = attackData[0]
             attackResult = attackData[1]
-            gameOver = False        # DUMMY DATA HERE CHANGE THIS
+            gameOver = attackData[4]
+            otherId = getOtherId(playerId)
             if validCoord:
-                otherId = getOtherId(playerId)
-                # attack player board and return result
                 socketio.emit('attackResult', (attackResult, coord), to=users[playerId])
                 socketio.emit('defenceResult', (attackResult, coord), to=users[otherId])
             if gameOver:
-                socketio.emit('gameOver', playerId, broadcast=True)
+                socketio.emit('gameVictory', to=users[playerId])
+                socketio.emit('gameDefeat', to=users[otherId])
+                # board.initialise()
             #if statement checking game over, if true broadcast victory page?
 
 
 @socketio.on('removeBoatIfOnBoard')
-def attack(shipName):
+def removeBoat(shipName):
     board = Board.instance()
     sid = request.sid
     playerId = users.index(sid)
     shipName = shipName.title()
     board.remove(shipName, playerId)
 
+@socketio.on('clearBoard')
+def clearBoard():
+    board = Board.instance()
+    sid = request.sid
+    playerId = users.index(sid)
+    board.clearBoard(playerId)
+    board.printBoard(playerId)
+
+@socketio.on('rotate')
+def rotate(shipName):
+    board = Board.instance()
+    sid = request.sid
+    playerId = users.index(sid)
+    shipName = shipName.title()
+    rotationValid, newOrientation = board.rotateShip(shipName, playerId)
+    if rotationValid:
+        board.printBoard(playerId)
+        socketio.emit('rotate', newOrientation, to=users[playerId])
 
 def getOtherId(playerId):
     if playerId == 0:

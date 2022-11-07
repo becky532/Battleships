@@ -185,7 +185,7 @@ class Board:
 
             rotationValid = False
 
-        return rotationValid
+        return rotationValid, shipDict[shipType]['orientation']
 
     def __checkRotation(self, length, row, col, orientation, point, player):
 
@@ -194,7 +194,7 @@ class Board:
         checkCells = [point]
         for index in range(1, length):
             if orientation == 'horizontal':
-                newCell = [row + index, col]
+                newCell = [row - index, col]
             elif orientation == 'vertical':
                 newCell = [row, col + index]
 
