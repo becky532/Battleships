@@ -31,12 +31,11 @@ def playerSetup(player):
                     whichShip = input("Choose the ship type: ")
                     whichRow = input("Choose a row for your ship: ")
                     whichCol = input("Choose a column for your ship: ")
+                    row = int(whichRow)
+                    col = int(whichCol)
                 except ValueError:
                     print("Invalid input!")
                     continue
-
-                row = int(whichRow)
-                col = int(whichCol)
 
                 shipType = whichShip
 
