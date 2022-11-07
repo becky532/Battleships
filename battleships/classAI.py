@@ -43,14 +43,12 @@ class AI:
         return guessRow, guessCol
 
     def removeShipAsTarget(self, shipSunk):
-        
-
+        del self.targets[shipSunk]
+        self.destroyed[shipSunk] = True
 
     def AISmartAttackMoves(self):
-        listShips = ['Carrier', 'Battleship', 'Cruiser', 'Submarine', 'Destroyer']
-        for ship in listShips:
-            if self.destroyed[ship] == True:
-                listShips.remove(ship)
+        listShips = list(self.targets.keys())
+
         cellsHit = {}
         for ship in listShips:
             cellsHit[ship] = len(self.targets[ship])

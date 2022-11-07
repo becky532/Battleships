@@ -129,8 +129,9 @@ def playerAI(AIPlayer: AI, game:Game, board: Board):
     else:
         print("The computer failed to hit a ship")
         logging.info("Computer missed")
+
     if shipSunk == True:
-        AIPlayer.destroyed[shipHit] = True
+        AIPlayer.removeShipAsTarget(shipHit)
         print(f"The computer has sunk your {shipHit}. Oh no!")
         logging.info(f"Computer has sunk player's {shipHit}")
 
