@@ -102,12 +102,6 @@ function rotate(newOrientation){
         console.log('Done rotation');
 }
 
-
-
-$('#all-ready').on('click', function() {
-    socket.emit('readyCheck');
-})
-
 $('#clear-board').on('click', function() {
     socket.emit('clearBoard');
     boatsOnGrid = document.querySelectorAll("#dropzone .boat").forEach((element) => element.remove());
@@ -115,16 +109,6 @@ $('#clear-board').on('click', function() {
     initialiseBoats();
 })
 
-enemyZone.addEventListener("click", (event) => {
-    if (player1Ready && player2Ready) {
-        let xCoord = Math.floor(event.offsetX/gridSquareSize);
-        console.log("Xcoord = " + xCoord);
-        let yCoord = Math.floor(event.offsetY/gridSquareSize);
-        console.log("Ycoord = " + yCoord);
-        let coord = [xCoord, yCoord]
-        socket.emit('attack', coord)
-    }
-});
 
 function showAttackResult(attackResult, coord){
     player = enemyZone;
@@ -153,6 +137,7 @@ function showEnemyAttack(attackResult, coord){
 }
 
 function stopBoatsDragging(){
+    let boatArray = Array.from(document.getElementsByClassName("boat"));
     boatArray.forEach((element) => {
         element.setAttribute("draggable", false);
     });

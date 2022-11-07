@@ -2,7 +2,8 @@ from flask_socketio import SocketIO
 from flask import Flask, request
 from gameBack import Board
 from gameMechanicsBackend import Game
-
+from classAI import AI
+import time
 server = Flask(__name__)
 server.config['SECRET_KEY'] = 'TeamTitanic'
 socketio = SocketIO(server, cors_allowed_origins='*')
@@ -54,6 +55,19 @@ def readyCheck():
             socketio.emit('personalReady', playerId, to=users[playerId])
             socketio.emit('enemyReady', playerId, to=users[otherId])
 
+@socketio.on('readyCheckAi')
+def readyCheckAi():
+        board = Board.instance()
+        sid = request.sid
+        playerId = users.index(sid)
+        AiId = 1
+        ready = board.checkAllPiecesPlaced(playerId)
+        if ready:
+            socketio.emit('personalReady', playerId, to=users[playerId])
+            # randomise AI board
+            board.randomiseBoard(AiId)
+            socketio.emit('enemyReady', AiId, to=users[playerId])
+
 
 @socketio.on('attack')
 def attack(coord):
@@ -78,6 +92,54 @@ def attack(coord):
                 socketio.emit('gameDefeat', to=users[otherId])
                 # board.initialise()
             #if statement checking game over, if true broadcast victory page?
+
+
+@socketio.on('attackAi')
+def attackAi(coord):
+    board = Board.instance()
+    ai = AI.instance()
+    sid = request.sid
+    playerId = users.index(sid)
+    row = 6 - coord[1]
+    col = coord[0]
+    alreadyHit = board.checkDuplicateAttack(row, col, playerId)
+    if not alreadyHit:
+        attackData = game.fire(row, col, playerId)
+        if attackData is not None:
+            validCoord = attackData[0]
+            attackResult = attackData[1]
+            gameOver = attackData[4]
+            if validCoord:
+                socketio.emit('attackResult', (attackResult, coord), to=users[playerId])
+
+            if gameOver:
+                socketio.emit('gameVictory', to=users[playerId])
+            else:
+                coord = ['', '']
+                col = ''
+                row = ''
+
+                aiAlreadyHit = True
+                while aiAlreadyHit:
+                    move = ai.decideAttack()
+                    row = move[0]
+                    col = move[1]
+                    aiAlreadyHit = board.checkDuplicateAttack(row, col, 1)
+
+                attackData = game.fire(row, col, 1)
+                attackResult = attackData[1]
+                shipName = attackData[2]
+                shipSunk = attackData[3]
+                if shipSunk:
+                    ai.removeShipAsTarget(shipName)
+                gameOver = attackData[4]
+                coord[0] = col
+                coord[1] = 6 - row
+                socketio.emit('defenceResult', (attackResult, coord), to=users[0])
+                if gameOver:
+                    socketio.emit('gameDefeat', to=users[playerId])
+
+
 
 
 @socketio.on('removeBoatIfOnBoard')
@@ -124,6 +186,7 @@ if __name__ == "__main__":
     users = [None, None]
     initBoard()
     game = Game(Board.instance())
+    ai = AI.instance()
     print("Server has started!")
     socketio.run(server, port=5555)
 
