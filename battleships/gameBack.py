@@ -46,11 +46,11 @@ class Board:
         return self.board
 
     def newShipDict(self):
-        self.shipsDict = {'Carrier': {'length': 5, 'position': [], 'orientation': '', 'value': 1},
-                          'Battleship': {'length': 4, 'position': [], 'orientation': '', 'value': 2},
-                          'Cruiser': {'length': 3, 'position': [], 'orientation': '', 'value': 3},
-                          'Submarine': {'length': 3, 'position': [], 'orientation': '', 'value': 4},
-                          'Destroyer': {'length': 2, 'position': [], 'orientation': '', 'value': 5}
+        self.shipsDict = {'Carrier': {'length': 5, 'position': [], 'orientation': 'horizontal', 'value': 1},
+                          'Battleship': {'length': 4, 'position': [], 'orientation': 'horizontal', 'value': 2},
+                          'Cruiser': {'length': 3, 'position': [], 'orientation': 'horizontal', 'value': 3},
+                          'Submarine': {'length': 3, 'position': [], 'orientation': 'horizontal', 'value': 4},
+                          'Destroyer': {'length': 2, 'position': [], 'orientation': 'horizontal', 'value': 5}
                           }
         return self.shipsDict
     def printBoard(self, player):
@@ -71,17 +71,27 @@ class Board:
             print(str(i) + ' ', end='')
         print()
 
-    def validateInitialPlacement(self, length, row, col, player):
+    def validateInitialPlacement(self, length, row, col, orientation, player):
 
         board = self.checkBoard(player)[0]
-
         placementValid = True
-        endCell = col + length - 1
-        if endCell <= self.lastIndex:
-            for colInd in range(col, col + length):
-                if board[row][colInd] != 0:
-                    placementValid = False
-                    break
+        if orientation == 'horizontal':
+            endCol = col + length - 1
+            if endCol <= self.lastIndex:
+                for colInd in range(col, col + length):
+                    if board[row][colInd] != 0:
+                        placementValid = False
+                        break
+            else:
+                placementValid = False
+
+        elif orientation == 'vertical':
+            endRow = row - length - 1
+            if endRow >= 0:
+                for rowInd in range(row - length, row):
+                    if board[rowInd][col] != 0:
+                        placementValid = False
+                        break
         else:
             placementValid = False
 
@@ -107,17 +117,18 @@ class Board:
 
         if 0 <= row <= self.lastIndex and 0 <= col <= self.lastIndex:
             shipLength = shipDict[shipType]['length']
-            placementValid = self.validateInitialPlacement(shipLength, row, col, player)
+            orientation = shipDict[shipType]['orientation']
+            placementValid = self.validateInitialPlacement(shipLength, row, col, orientation, player)
 
-            if placementValid == True:
-
-                shipLength = shipDict[shipType]["length"]
-
+            if placementValid == True and orientation == 'horizontal':
                 for cellCol in range(col, col + shipLength):
                     shipDict[shipType]['position'].append([row, cellCol])
+                    self.place(shipType, player)
+            elif placementValid == True and orientation == 'vertical':
+                for cellRow in range(row - shipLength, col):
+                    shipDict[shipType]['position'].append([cellRow, col])
+                    self.place(shipType, player)
 
-                self.place(shipType, player)
-                shipDict[shipType]['orientation'] = 'horizontal'
 
         else:
 
@@ -196,7 +207,7 @@ class Board:
             if orientation == 'horizontal':
                 newCell = [row - index, col]
             elif orientation == 'vertical':
-                newCell = [row, col - index]
+                newCell = [row, col + index]
 
             if 0 <= newCell[0] <= self.lastIndex and 0 <= newCell[1] <= self.lastIndex:
 
@@ -364,8 +375,7 @@ if __name__ == '__main__':
     board.placeShip(0, 0, 'Carrier', 0)
     board.rotateShip('Carrier', 0)
     board.printBoard(0)
-    board.placeShip(6, 0, 'Battleship', 0)
-    board.rotateShip('Battleship', 0)
+    board.placeShip(6, 0, 'Cruiser', 0)
+    board.rotateShip('Cruiser', 0)
     board.printBoard(0)
-    board.randomiseBoard(1)
-    board.printBoard(1)
+

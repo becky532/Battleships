@@ -57,7 +57,7 @@ def playerSetup(player):
                 rotate = input("Would you like to rotate your ship?").title()
                 if rotate == 'Yes':
                     rotateValid = board.rotateShip(whichShip, player)
-                    if rotateValid == True:
+                    if rotateValid[0] == True:
                         print(f"{whichShip} Rotated")
                         logging.info(f"Player {playerID} rotated piece {whichShip}")
                         board.printBoard(player)
