@@ -124,12 +124,11 @@ class Board:
                 for cellCol in range(col, col + shipLength):
                     shipDict[shipType]['position'].append([row, cellCol])
                     self.place(shipType, player)
+
             elif placementValid == True and orientation == 'vertical':
                 for cellRow in range(row - shipLength, col):
                     shipDict[shipType]['position'].append([cellRow, col])
                     self.place(shipType, player)
-
-
         else:
 
             placementValid = False
@@ -146,6 +145,7 @@ class Board:
         shipDict[shipType]['position'] = []
 
     def place(self, shipType, player):
+
         board = self.checkBoard(player)[0]
         shipDict = self.checkBoard(player)[1]
 
