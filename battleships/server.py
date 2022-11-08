@@ -130,6 +130,8 @@ def attackAi(coord):
                 attackResult = attackData[1]
                 shipName = attackData[2]
                 shipSunk = attackData[3]
+                if attackResult:
+                    ai.targets[shipName].append([row, col])
                 if shipSunk:
                     ai.removeShipAsTarget(shipName)
                 gameOver = attackData[4]
@@ -186,7 +188,6 @@ if __name__ == "__main__":
     users = [None, None]
     initBoard()
     game = Game(Board.instance())
-    ai = AI.instance()
     print("Server has started!")
     socketio.run(server, port=5555)
 

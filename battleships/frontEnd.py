@@ -9,7 +9,5 @@ def main(gameType):
     return render_template('battleship.html', gameType=gameType)
 
 
-
-
 if __name__ == "__main__":
     app.run()
