@@ -21,7 +21,6 @@ socket.on('personalReady', (playerNum) => {
     document.getElementById('all-ready').classList.add("invisible");
     document.getElementById("clear-board").classList.add('invisible');
     stopBoatsDragging();
-    // ADD CODE TO STOP SHIPS BEING DRAGGED, HIDE BOAT TEXT
 });
 
 socket.on('enemyReady', (playerNum) => {
