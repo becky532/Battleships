@@ -1,0 +1,632 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html, body {
+  height: 100%;
+}
+.main-container{
+display: flex;
+flex-direction: column;
+flex-wrap: nowrap;
+}
+#top-part {
+  display: flex;
+  height: 29%;
+  max-height: 600px;
+  justify-content: space-evenly;
+  align-items: center;
+  background: rgb(204, 120, 120);
+  background: linear-gradient(
+180deg
+, rgba(204, 120, 120, 1) 0%, rgba(252, 181, 159, 1) 50%, rgba(250, 244, 182, 1) 100% );
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+#top-part > * {
+  margin: 4vw;
+}
+#bottom-part {
+  display: flex;
+  /* height: 50%; */
+  justify-content: center;
+  /* background: rgb(204, 120, 120); */
+  background: linear-gradient(
+180deg
+, rgba(185, 214, 214, 0.9) 0%, rgba(51, 131, 148, 1) 50%, rgba(23, 54, 87, 1) 100% );
+  background-repeat: no-repeat;
+  margin-top: -1.5vw;
+  z-index: 2;
+}
+#bottom-part > * {
+  margin: 50px 20px 200px;
+}
+.enemy-ready {
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  text-align: center;
+  font-size: 70px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+.menu-buttons {
+  text-align: center;
+  max-width: 176px;
+  width: 10vw;
+  min-width: 150px;
+  color: rgb(226, 91, 91);
+  font-size: 43px;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  z-index: 10;
+  border-radius: 20%;
+}
+ .menu-buttons:hover{
+  color: rgb(91, 154, 226);
+  cursor: pointer;
+}
+
+.silouetes{
+  display: flex;
+  height: 10vw;
+  /* position: absolute; */
+  justify-content: space-around;
+  /* margin: revert; */
+  /* background-color: grey; */
+  /* opacity: 0.4; */
+  margin-top: -8.6vw;
+  align-items: flex-end;
+  z-index: 0;
+}
+/**********
+  RADAR
+**********/
+
+#radar-container {
+  border: #ffc75f 1vw solid;
+  border-radius: 50%;
+  min-width: 50px;
+  min-height: 50px;
+  max-width: 400px;
+  max-height: 400px;
+  width: 25vw;
+  height: 25vw;
+  display: grid;
+}
+#radar-container > *{
+  grid-column: 1;
+  grid-row: 1;
+}
+#radar-scan {
+
+  border-radius: 50%;
+  background: linear-gradient(230deg, #f9f871 00%, transparent 45.34%) 0 0;
+  background-repeat: no-repeat;
+  background-size: 50% 50%;
+  animation: linear radar-rotation 4s;
+  animation-iteration-count: infinite;
+}
+@keyframes radar-rotation {
+  0% {
+    transform:rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+#radar-inner-lines {
+
+background: rgb(2, 0, 36);
+
+background: radial-gradient(
+      circle,
+      rgba(2, 0, 36, 0) 10%,
+      #ff6f91 11%,
+      rgba(0, 255, 50, 0) 12%
+    ),
+    radial-gradient(
+      circle,
+      rgba(2, 0, 36, 0) 35%,
+      #ff6f91 36%,
+      rgba(0, 255, 50, 0) 37%
+    ),
+    radial-gradient(
+      circle,
+      rgba(2, 0, 36, 0) 60%,
+      #ff6f91 61%,
+      rgba(0, 255, 50, 0) 62%
+    );
+
+border-radius: 50%;
+}
+.dot {
+  width: 0.7vw;
+  height: 0.7vw;
+  border-radius: 50%;
+  background-color: #f9f871;
+  animation: linear dotAnim 4s;
+  animation-iteration-count: infinite;
+}
+.dot1 {
+  transform: translate(14vw, 17vw);
+  animation-delay: 1.6s;
+
+}
+.dot2 {
+  transform: translate(9vw, 3vw);
+  animation-delay: 3.8s;
+
+}
+.dot3 {
+  transform: translate(7vw, 16vw);
+  animation-delay: 2.4s;
+
+}
+.dot4 {
+  transform: translate(4vw, 18vw);
+  animation-delay: 2.3s;
+
+}
+.dot5 {
+  transform: translate(20vw, 10vw);
+  animation-delay: 0.6s;
+
+}
+.dot6 {
+  transform: translate(6vw, 12vw);
+  animation-delay: 2.6s;
+
+}
+.dot7 {
+  transform: translate(12vw, 14vw);
+  animation-delay: 1.7s;
+
+}
+.dot8 {
+  transform: translate(14vw, 2vw);
+  animation-delay: 0.2s;
+
+}
+.dot9 {
+  transform: translate(12vw, 20vw);
+  animation-delay: 1.6s;
+}
+@keyframes dotAnim {
+  0% {
+    filter: blur(5px);
+  }
+  10% {
+    filter: blur(0px);
+  }
+  60% {
+    filter: blur(3px);
+  }
+  100% {
+    filter: blur(5px);
+  }
+}
+#radar-grid {
+
+border-radius: 50%;
+
+background-image: linear-gradient(to right, #d65db1 1px, transparent 1px),
+    linear-gradient(to bottom, #d65db1 1px, transparent 1px);
+
+background-size: 1vw 1vw;
+}
+#radar-background {
+
+border-radius: 50%;
+
+background: #845ec2;
+
+background: radial-gradient(circle, #845ec2 0%, rgba(0, 0, 0, 1) 100%);
+}
+.w{
+  width: 48px;
+  height: 48px;
+  background: rgb(0, 166, 250, 0.49);
+  margin-left: 2px;
+  margin-top: 2px;
+  position: absolute;
+  z-index: 2;
+}
+.w > * {
+  position: absolute;
+    height: 50px;
+    width: 50px;
+    background: rgb(0, 48, 100, 0.21);
+    transform-origin: bottom;
+}
+.water1{
+  clip-path: polygon(0 79%, 19% 83%, 31% 80%, 46% 82%, 57% 77%,
+  68% 83%, 77% 76%, 86% 81%, 91% 75%, 100% 83%, 100% 100%, 0 100%);
+  animation: waterMoves 4s infinite;
+}
+.water2{
+  clip-path: polygon(0 65%, 19% 66%, 31% 54%, 46% 58%, 56% 50%,
+  71% 56%, 76% 49%, 86% 56%, 94% 49%, 100% 60%, 100% 100%, 0 100%);
+  animation: waterMoves 3s infinite;
+}
+.water3{
+  clip-path: polygon(0% 43%, 18% 37%, 32% 43%, 51% 48%, 58% 42%,
+   68% 44%, 78% 42%, 86% 46%, 94% 42%, 100% 50%, 100% 100%, 0% 100%);
+   animation: waterMoves 2s infinite;
+}
+.water4{
+  clip-path: polygon(0 19%, 16% 26%, 32% 27%, 48% 20%, 57% 32%,
+  69% 36%, 76% 29%, 88% 26%, 94% 32%, 100% 34%, 100% 100%, 0 100%);
+  animation: waterMoves 3.2s infinite;
+}
+.water5{clip-path: polygon(0 13%, 17% 8%, 32% 11%, 53% 6%, 71% 9%,
+  81% 15%, 87% 11%, 91% 18%, 98% 14%, 100% 19%, 100% 100%, 0 100%);
+  animation: waterMoves 6s infinite;}
+
+
+@keyframes waterMoves {
+  0%{transform: scaleY(0.7);}
+  25%{transform: scaleY(0.8);}
+  40%{transform: scaleY(0.9);}
+  55%{transform: scaleY(0.8);}
+  70%{transform: scaleY(0.85);}
+  100%{transform: scaleY(0.7);}
+
+}
+
+/**********
+  BOATS INTERACTION
+**********/
+
+.menu {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.boat:hover {
+  cursor: grab;
+}
+.red-border {
+  border: red 2px solid;
+}
+
+
+  BOATS
+**********/
+.p1color{
+  background-color: #7955b3
+}
+.p2color{
+  background-color: #b3556d
+}
+
+.shadow {
+  filter: drop-shadow(8px 5px 6px rgba(7, 1, 10, 0.5));
+}
+#battleship-silouetteP1 {
+  width: 24vw;
+  height: 8vw;
+  background-color: #100b18;
+  clip-path: polygon(
+    6% 64%,
+    10% 79%,
+    10% 79%,
+    13% 81%,
+    13% 81%,
+    13% 89%,
+    13% 89%,
+    15% 89%,
+    15% 89%,
+    16% 81%,
+    16% 81%,
+    19% 83%,
+    19% 83%,
+    18% 86%,
+    18% 86%,
+    17% 89%,
+    17% 89%,
+    19% 91%,
+    19% 91%,
+    25% 89%,
+    25% 89%,
+    33% 87%,
+    33% 87%,
+    45% 91%,
+    45% 91%,
+    59% 90%,
+    59% 90%,
+    62% 97%,
+    62% 97%,
+    66% 98%,
+    66% 98%,
+    68% 95%,
+    68% 95%,
+    68% 91%,
+    68% 91%,
+    85% 90%,
+    85% 90%,
+    87% 88%,
+    87% 88%,
+    88% 77%,
+    88% 77%,
+    91% 69%,
+    91% 69%,
+    93% 62%,
+    93% 62%,
+    96% 56%,
+    96% 56%,
+    80% 57%,
+    80% 57%,
+    80% 55%,
+    80% 55%,
+    77% 54%,
+    77% 54%,
+    77% 51%,
+    77% 51%,
+    75% 51%,
+    75% 51%,
+    74% 53%,
+    74% 53%,
+    73% 54%,
+    73% 54%,
+    73% 58%,
+    73% 58%,
+    72% 59%,
+    72% 59%,
+    71% 54%,
+    71% 54%,
+    69% 54%,
+    69% 54%,
+    65% 55%,
+    65% 55%,
+    62% 46%,
+    62% 46%,
+    62% 43%,
+    62% 43%,
+    61% 43%,
+    61% 43%,
+    59% 39%,
+    59% 39%,
+    57% 39%,
+    57% 39%,
+    55% 36%,
+    55% 36%,
+    55% 24%,
+    55% 24%,
+    55% 22%,
+    55% 22%,
+    54% 22%,
+    54% 22%,
+    54% 19%,
+    54% 19%,
+    54% 15%,
+    54% 15%,
+    53% 14%,
+    53% 14%,
+    53% 15%,
+    53% 15%,
+    52% 18%,
+    52% 18%,
+    52% 21%,
+    52% 21%,
+    51% 22%,
+    51% 22%,
+    51% 15%,
+    51% 15%,
+    51% 6%,
+    51% 6%,
+    50% 7%,
+    50% 7%,
+    50% 36%,
+    50% 36%,
+    50% 47%,
+    50% 47%,
+    48% 46%,
+    48% 46%,
+    48% 48%,
+    48% 48%,
+    48% 63%,
+    48% 63%,
+    46% 63%,
+    46% 63%,
+    46% 41%,
+    46% 41%,
+    43% 42%,
+    43% 42%,
+    43% 56%,
+    43% 56%,
+    42% 56%,
+    42% 56%,
+    42% 63%,
+    42% 63%,
+    40% 63%,
+    40% 63%,
+    40% 54%,
+    40% 54%,
+    39% 54%,
+    39% 54%,
+    39% 46%,
+    39% 46%,
+    37% 20%,
+    37% 20%,
+    37% 16%,
+    37% 16%,
+    34% 15%,
+    34% 15%,
+    35% 19%,
+    35% 19%,
+    35% 49%,
+    35% 49%,
+    34% 48%,
+    34% 48%,
+    34% 41%,
+    34% 41%,
+    30% 41%,
+    30% 41%,
+    32% 43%,
+    32% 43%,
+    31% 53%,
+    31% 53%,
+    29% 53%,
+    29% 53%,
+    29% 57%,
+    29% 57%,
+    26% 58%,
+    26% 58%,
+    26% 55%,
+    26% 55%,
+    24% 55%,
+    24% 55%,
+    24% 53%,
+    24% 53%,
+    22% 52%,
+    22% 52%,
+    22% 64%,
+    22% 64%,
+    6% 63%,
+    6% 63%
+  );
+}
+#battleship-silouetteP2 {
+  width: 24vw;
+  height: 8vw;
+  background-color: #100b18;
+  clip-path: polygon(
+    2% 73%,
+    2% 81%,
+    2% 84%,
+    3% 86%,
+    8% 86%,
+    8% 89%,
+    4% 88%,
+    5% 93%,
+    5% 94%,
+    8% 94%,
+    96% 94%,
+    97% 94%,
+    98% 91%,
+    97% 86%,
+    96% 66%,
+    91% 67%,
+    91% 64%,
+    92% 63%,
+    91% 60%,
+    91% 59%,
+    89% 60%,
+    89% 63%,
+    89% 67%,
+    76% 66%,
+    76% 65%,
+    77% 65%,
+    77% 63%,
+    82% 62%,
+    81% 61%,
+    76% 63%,
+    75% 61%,
+    73% 60%,
+    73% 59%,
+    72% 60%,
+    71% 65%,
+    72% 65%,
+    72% 66%,
+    67% 67%,
+    67% 61%,
+    68% 61%,
+    68% 58%,
+    66% 58%,
+    66% 55%,
+    67% 55%,
+    66% 53%,
+    64% 53%,
+    64% 50%,
+    65% 50%,
+    65% 46%,
+    64% 45%,
+    63% 41%,
+    63% 40%,
+    63% 14%,
+    62% 14%,
+    62% 58%,
+    61% 58%,
+    61% 55%,
+    62% 55%,
+    62% 53%,
+    61% 53%,
+    61% 50%,
+    61% 42%,
+    60% 38%,
+    59% 38%,
+    59% 42%,
+    59% 51%,
+    59% 54%,
+    59% 58%,
+    57% 57%,
+    57% 50%,
+    55% 50%,
+    55% 54%,
+    51% 54%,
+    51% 58%,
+    50% 58%,
+    51% 42%,
+    50% 40%,
+    49% 39%,
+    48% 42%,
+    48% 52%,
+    49% 54%,
+    47% 59%,
+    47% 64%,
+    46% 64%,
+    46% 72%,
+    44% 72%,
+    44% 71%,
+    45% 68%,
+    43% 68%,
+    43% 66%,
+    41% 66%,
+    41% 67%,
+    40% 66%,
+    39% 68%,
+    36% 68%,
+    36% 60%,
+    47% 46%,
+    36% 58%,
+    36% 46%,
+    36% 46%,
+    35% 67%,
+    35% 67%,
+    35% 50%,
+    35% 50%,
+    35% 46%,
+    34% 46%,
+    34% 29%,
+    34% 26%,
+    34% 2%,
+    33% 27%,
+    33% 31%,
+    33% 49%,
+    33% 51%,
+    33% 72%,
+    29% 73%,
+    28% 72%,
+    29% 72%,
+    29% 66%,
+    27% 66%,
+    27% 67%,
+    26% 67%,
+    25% 68%,
+    24% 68%,
+    24% 69%,
+    19% 67%,
+    19% 69%,
+    24% 71%,
+    24% 73%,
+    18% 73%,
+    17% 71%,
+    16% 71%,
+    15% 72%,
+    10% 72%,
+    10% 70%,
+    9% 70%,
+    9% 73%
+  );
+}
