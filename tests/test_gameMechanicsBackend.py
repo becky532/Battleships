@@ -16,30 +16,29 @@ class TestGame(TestCase):
                            [0, 'X', 'X', 'X', 'X', 'X', 0],
                            [0, 0, 0, 'X', 5, 0, 0]]
         game = Game(board)
-        game.currentPlayer = 2
-        validHit, hit, shipHit, shipSunk = game.fire(6, 4)
-        gameOver = game.checkGameOver()
+        game.currentPlayer = 1
+        validHit, hit, shipHit, shipSunk, gameOver = game.fire(6, 4, 1)
 
         assert validHit == True
         assert hit == True
         assert shipHit == 'Destroyer'
         assert shipSunk == True
         assert gameOver == True
-        assert game.currentPlayer == 2
+        assert game.currentPlayer == 1
 
     def test_fire(self):
         board = Board.instance()
         board.initialise()
         game = Game(board)
-        game.currentPlayer = 2
         board.placeShip(0, 0, 'Carrier', 0)
         board.placeShip(1, 0, 'Battleship', 0)
         board.placeShip(2, 0, 'Cruiser', 0)
         board.placeShip(3, 0, 'Submarine', 0)
         board.placeShip(4, 0, 'Destroyer', 0)
-        game.fire(0, 0)
-        game.currentPlayer = 2
-        game.fire(6, 6)
+        game.currentPlayer = 1
+        game.fire(0, 0, 1)
+        game.currentPlayer = 1
+        game.fire(6, 6, 1)
 
         assert board.firstPlayer[0][0] == 'X'
         assert board.firstPlayerDict['Carrier']['position'][0] == 'X'

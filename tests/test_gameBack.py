@@ -38,14 +38,14 @@ class TestBoard(TestCase):
     def test_rotateShip(self):
         board = Board.instance()
         board.initialise()
-        board.placeShip(0, 0, 'Carrier', 0)
+        board.placeShip(6, 0, 'Carrier', 0)
         board.rotateShip('Carrier', 0)
-        board.placeShip(6, 0, 'Battleship', 0)
+        board.placeShip(0, 0, 'Battleship', 0)
         board.rotateShip('Battleship', 0)
 
-        assert board.firstPlayerDict['Carrier']['position'] == [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0]]
-        assert board.firstPlayer[0][4] == 0
-        assert board.firstPlayer[6][3] == 2
+        assert board.firstPlayerDict['Carrier']['position'] == [[6, 0], [5, 0], [4, 0], [3, 0], [2, 0]]
+        assert board.firstPlayer[4][0] == 1
+        assert board.firstPlayer[0][3] == 2
 
     def test_allPiecesDown(self):
         board = Board.instance()

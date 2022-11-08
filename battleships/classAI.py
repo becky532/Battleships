@@ -107,6 +107,7 @@ class AI:
         else:
             possibleMoves = None
 
+
         return possibleMoves
 
     def decideAttack(self):
