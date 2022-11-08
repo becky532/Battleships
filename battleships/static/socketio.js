@@ -43,10 +43,12 @@ socket.on('defenceResult', (attackResult, coord) => {
 
 socket.on('gameVictory', ()=> {
     alert('YOU WON! WOOO!');
+    setTimeout(function(){ window.location.href= '/victory';}, 3000);
 });
 
 socket.on('gameDefeat', ()=> {
     alert('Better luck next time. Loser.');
+    setTimeout(function(){ window.location.href= '/defeat';}, 3000);
 });
 
 socket.on('rotate', (newOrientation)=> {

@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  overflow:hidden;
 }
 html, body {
   height: 100%;
@@ -50,6 +51,7 @@ flex-wrap: nowrap;
   pointer-events: none;
 }
 .menu-buttons {
+  overflow: visible;
   text-align: center;
   max-width: 176px;
   width: 10vw;
@@ -221,56 +223,7 @@ background: #845ec2;
 
 background: radial-gradient(circle, #845ec2 0%, rgba(0, 0, 0, 1) 100%);
 }
-.w{
-  width: 48px;
-  height: 48px;
-  background: rgb(0, 166, 250, 0.49);
-  margin-left: 2px;
-  margin-top: 2px;
-  position: absolute;
-  z-index: 2;
-}
-.w > * {
-  position: absolute;
-    height: 50px;
-    width: 50px;
-    background: rgb(0, 48, 100, 0.21);
-    transform-origin: bottom;
-}
-.water1{
-  clip-path: polygon(0 79%, 19% 83%, 31% 80%, 46% 82%, 57% 77%,
-  68% 83%, 77% 76%, 86% 81%, 91% 75%, 100% 83%, 100% 100%, 0 100%);
-  animation: waterMoves 4s infinite;
-}
-.water2{
-  clip-path: polygon(0 65%, 19% 66%, 31% 54%, 46% 58%, 56% 50%,
-  71% 56%, 76% 49%, 86% 56%, 94% 49%, 100% 60%, 100% 100%, 0 100%);
-  animation: waterMoves 3s infinite;
-}
-.water3{
-  clip-path: polygon(0% 43%, 18% 37%, 32% 43%, 51% 48%, 58% 42%,
-   68% 44%, 78% 42%, 86% 46%, 94% 42%, 100% 50%, 100% 100%, 0% 100%);
-   animation: waterMoves 2s infinite;
-}
-.water4{
-  clip-path: polygon(0 19%, 16% 26%, 32% 27%, 48% 20%, 57% 32%,
-  69% 36%, 76% 29%, 88% 26%, 94% 32%, 100% 34%, 100% 100%, 0 100%);
-  animation: waterMoves 3.2s infinite;
-}
-.water5{clip-path: polygon(0 13%, 17% 8%, 32% 11%, 53% 6%, 71% 9%,
-  81% 15%, 87% 11%, 91% 18%, 98% 14%, 100% 19%, 100% 100%, 0 100%);
-  animation: waterMoves 6s infinite;}
 
-
-@keyframes waterMoves {
-  0%{transform: scaleY(0.7);}
-  25%{transform: scaleY(0.8);}
-  40%{transform: scaleY(0.9);}
-  55%{transform: scaleY(0.8);}
-  70%{transform: scaleY(0.85);}
-  100%{transform: scaleY(0.7);}
-
-}
 
 /**********
   BOATS INTERACTION
@@ -282,12 +235,6 @@ background: radial-gradient(circle, #845ec2 0%, rgba(0, 0, 0, 1) 100%);
   flex-direction: column;
   align-items: center;
   flex-wrap: nowrap;
-}
-.boat:hover {
-  cursor: grab;
-}
-.red-border {
-  border: red 2px solid;
 }
 
 

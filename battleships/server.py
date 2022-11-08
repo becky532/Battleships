@@ -90,8 +90,8 @@ def attack(coord):
             if gameOver:
                 socketio.emit('gameVictory', to=users[playerId])
                 socketio.emit('gameDefeat', to=users[otherId])
-                # board.initialise()
-            #if statement checking game over, if true broadcast victory page?
+                board.initialise()
+
 
 
 @socketio.on('attackAi')
@@ -140,6 +140,7 @@ def attackAi(coord):
                 socketio.emit('defenceResult', (attackResult, coord), to=users[0])
                 if gameOver:
                     socketio.emit('gameDefeat', to=users[playerId])
+                    board.initialise()
 
 
 

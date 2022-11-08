@@ -1,7 +1,7 @@
 function PlayerVSPlayer(){
-window.open("/");
+window.open("/game/pvp");
 }
 
 function ComputerVSPlayer(){
-window.open("/");
+window.open("/game/pvai");
 }
